@@ -1,10 +1,9 @@
 package com.sparta.hh2stagram.global.service;
 
-import com.sparta.balance.domain.user.entity.UserRoleEnum;
-import com.sparta.balance.global.entity.RefreshToken;
-import com.sparta.balance.global.handler.exception.CustomValidationException;
-import com.sparta.balance.global.jwt.JwtUtil;
-import com.sparta.balance.global.repository.RefreshTokenRepository;
+import com.sparta.hh2stagram.global.entity.RefreshToken;
+import com.sparta.hh2stagram.global.handler.exception.CustomValidationException;
+import com.sparta.hh2stagram.global.jwt.JwtUtil;
+import com.sparta.hh2stagram.global.repository.RefreshTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +41,7 @@ public class RefreshTokenService {
     public boolean validateRefreshToken(String token) {
         return refreshTokenRepository.findByToken(token)
                 .map(RefreshToken::getExpiryDate)
-                .map(expiryDate -> !expiryDate.before(new Date()))
+                .map(expiryDate -> !((Date) expiryDate).before(new Date()))
                 .orElse(false);
     }
 
@@ -51,7 +50,7 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(refreshToken)
                 .filter(token -> !token.getExpiryDate().before(new Date())) /*토큰 만료 여부 검사*/
                 .map(RefreshToken::getEmail)
-                .map(email -> jwtUtil.createAccessToken(email, UserRoleEnum.USER)); /*새 액세스 토큰 생성*/
+                .map(email -> jwtUtil.createAccessToken(email, com.sparta.balance.domain.user.entity.UserRoleEnum.USER)); /*새 액세스 토큰 생성*/
     }
 
     /*리프레시 토큰 삭제*/
