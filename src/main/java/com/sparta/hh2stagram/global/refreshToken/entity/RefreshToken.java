@@ -1,4 +1,4 @@
-package com.sparta.hh2stagram.global.entity;
+package com.sparta.hh2stagram.global.refreshToken.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;

@@ -1,7 +1,7 @@
 package com.sparta.hh2stagram.global.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.balance.global.dto.ResponseDto;
+import com.sparta.hh2stagram.global.refreshToken.dto.ResponseDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

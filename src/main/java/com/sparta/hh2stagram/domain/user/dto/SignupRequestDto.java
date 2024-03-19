@@ -1,8 +1,8 @@
 package com.sparta.hh2stagram.domain.user.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,20 +10,26 @@ import lombok.Getter;
 @Getter
 public class SignupRequestDto {
 
-    @Email
-    @NotBlank(message = "이메일")
-    private String email;
+    @NotBlank(message = "이메일 또는 전화번호")
+    private String loginId;
 
     @NotNull(message = "비밀번호")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_~]).{8,15}$")
     private String password;
 
     @NotNull(message = "사용자 이름")
-    private String username;
+    private String name;
+
+    @NotNull(message = "닉네임")
+    private String nickname;
+
+
 
     @Builder
-    public SignupRequestDto(String email, String password, String username) {
-        this.email = email;
+    public SignupRequestDto(String loginId, String password, String name, String nickname) {
+        this.loginId = loginId;
         this.password = password;
-        this.username = username;
+        this.name = name;
+        this.nickname=nickname;
     }
 }
