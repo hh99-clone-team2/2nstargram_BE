@@ -33,14 +33,14 @@ class LikesControllerTest {
         Long postId = 1L;
         Long userId = 1L;
 
-        // 좋아요 추가 요청을 보냅니다
+        // 좋아요 추가 요청을 보내기
         mockMvc.perform(MockMvcRequestBuilders.post("/api/posts/{postId}/likes?userId={userId}", postId, userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("좋아요가 추가되었습니다."))
                 .andDo(MockMvcResultHandlers.print());
 
-        // 좋아요 취소 요청을 보냅니다.
+        // 좋아요 취소 요청을 보내기
         mockMvc.perform(MockMvcRequestBuilders.post("/api/posts/{postId}/likes?userId={userId}", postId, userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
