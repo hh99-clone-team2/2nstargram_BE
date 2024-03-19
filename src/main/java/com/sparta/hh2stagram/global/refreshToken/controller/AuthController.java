@@ -1,7 +1,7 @@
 package com.sparta.hh2stagram.global.controller;
 
-import com.sparta.balance.global.dto.RefreshTokenRequest;
-import com.sparta.balance.global.service.RefreshTokenService;
+import com.sparta.hh2stagram.global.dto.RefreshTokenRequest;
+import com.sparta.hh2stagram.global.service.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
