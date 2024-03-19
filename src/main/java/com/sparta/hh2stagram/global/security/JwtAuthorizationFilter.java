@@ -1,6 +1,6 @@
 package com.sparta.hh2stagram.global.security;
 
-import com.sparta.balance.global.jwt.JwtUtil;
+import com.sparta.hh2stagram.global.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

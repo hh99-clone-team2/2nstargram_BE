@@ -1,7 +1,7 @@
 package com.sparta.hh2stagram.global.handler;
 
-import com.sparta.balance.global.dto.ResponseDto;
-import com.sparta.balance.global.handler.exception.CustomApiException;
+import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
+import com.sparta.hh2stagram.global.refreshToken.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
