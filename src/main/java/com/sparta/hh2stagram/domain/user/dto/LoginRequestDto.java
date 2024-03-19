@@ -8,16 +8,15 @@ import lombok.Getter;
 @Getter
 public class LoginRequestDto {
 
-    @Email
     @NotBlank
-    private String email;
+    private String loginId;
 
     @NotBlank
     private String password;
 
     @Builder
-    public LoginRequestDto(String email, String password) {
-        this.email = email;
+    public LoginRequestDto(String loginId, String password) {
+        this.loginId = loginId;
         this.password = password;
     }
 }

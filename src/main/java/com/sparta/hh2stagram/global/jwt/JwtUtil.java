@@ -1,6 +1,6 @@
 package com.sparta.hh2stagram.global.jwt;
 
-import com.sparta.balance.domain.user.entity.UserRoleEnum;
+import com.sparta.hh2stagram.domain.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

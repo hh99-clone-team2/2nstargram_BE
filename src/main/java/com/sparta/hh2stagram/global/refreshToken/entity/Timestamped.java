@@ -1,4 +1,4 @@
-package com.sparta.hh2stagram.global.entity;
+package com.sparta.hh2stagram.global.refreshToken.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

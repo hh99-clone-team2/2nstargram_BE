@@ -1,6 +1,6 @@
-package com.sparta.hh2stagram.global.repository;
+package com.sparta.hh2stagram.global.refreshToken.repository;
 
-import com.sparta.hh2stagram.global.entity.RefreshToken;
+import com.sparta.hh2stagram.global.refreshToken.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

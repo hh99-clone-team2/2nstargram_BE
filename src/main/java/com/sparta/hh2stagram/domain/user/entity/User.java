@@ -23,21 +23,25 @@ public class User {
     @Schema(description = "유저 생성 ID")
     private Long id;
 
-    @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    @Email
-    @Schema(description = "사용자 이메일(아이디)", nullable = false, example = "sparta@gmail.com")
-    @Column
+    @Schema(description = "사용자 이메일", example = "sparta@gmail.com")
+    @Column(unique = true)
     private String email;
 
-    @NotNull(message = "비밀번호는 필수 입력 값입니다.")
-    @Schema(description = "비밀번호, 8~15자 영어 대소문자, 숫자 특수문자 !@#$%^&*()_만 사용할 수 있습니다.", nullable = false, example = "abcd1234!")
+    @Column(unique = true)
+    @Schema(description = "사용자 휴대폰 번호", example = "010-1234-5678")
+    private String phoneNumber;
+
+    @Schema(description = "비밀번호, 8~15자 영어 대소문자, 숫자 특수문자 !@#$%^&*()_만 사용할 수 있습니다.", example = "abcd1234!")
     @Column
     private String password;
 
-    @NotNull(message = "유저이름은 필수 입력 값입니다.")
-    @Schema(description = "사용자 이름 입니다.", nullable = false, example = "르탄이")
+    @Schema(description = "사용자 이름 입니다.", example = "홍길동")
     @Column
-    private String username;
+    private String name;
+
+    @Schema(description = "닉네임 입니다.", example = "르탄이")
+    @Column(unique = true)
+    private String nickname;
 
     @Schema(description = "유저 권한", example = "USER")
     @Enumerated(value = EnumType.STRING)
@@ -45,10 +49,11 @@ public class User {
     private UserRoleEnum role;
 
     @Builder
-    public User(String email, String password, String username, UserRoleEnum role) {
+    public User(String email, String phoneNumber, String password,String name,String nickname) {
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.password = password;
-        this.username = username;
-        this.role = role;
+        this.name = name;
+        this.nickname = nickname;
     }
 }

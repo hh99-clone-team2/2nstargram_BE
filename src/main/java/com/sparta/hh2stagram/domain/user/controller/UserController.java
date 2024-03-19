@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    @Operation(summary = "회원 가입", description = "이메일(아이디), 비밀번호, 유저 이름을 등록합니다.")
+    @Operation(summary = "회원 가입", description = "이메일 또는 휴대폰 번호, 비밀번호, 유저 이름을 등록합니다.")
     @ApiResponse(responseCode = "201", description = "회원 가입 완료")
     /*회원가입 기능 호출*/
     ResponseEntity<Void> signupUser(@RequestBody SignupRequestDto requestDto) {
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "로그인", description = "회원 이메일(아이디), 비밀번호를 입력해 로그인할 수 있습니다.")
+    @Operation(summary = "로그인", description = "회원 이메일 또는 휴대폰 번호, 비밀번호를 입력해 로그인할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "로그인 완료")
     /*로그인 기능 호출*/
     ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto requestDto) {

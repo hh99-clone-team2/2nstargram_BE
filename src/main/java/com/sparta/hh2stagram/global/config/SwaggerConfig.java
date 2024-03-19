@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
-        info = @Info(title = "밸런스 게임 API 명세서",
-                description = "밸런스 게임 백엔드 서버",
+        info = @Info(title = "2stagram API 명세서",
+                description = "2stagram 서버 만들기",
                 version = "v1"))
 @Configuration
 public class SwaggerConfig {

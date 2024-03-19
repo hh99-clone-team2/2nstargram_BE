@@ -1,2 +1,4 @@
-package com.sparta.hh2stagram.domain.post.repository;public class PostService {
+package com.sparta.hh2stagram.domain.post.service;
+
+public class PostService {
 }
