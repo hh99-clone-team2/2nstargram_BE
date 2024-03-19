@@ -1,9 +1,9 @@
-package com.sparta.hanghaeboard.global.user.security;
+package com.sparta.hh2stagram.global.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.hanghaeboard.domain.user.dto.LoginRequestDto;
-import com.sparta.hanghaeboard.domain.user.entity.UserRoleEnum;
-import com.sparta.hanghaeboard.global.user.jwt.JwtUtil;
+import com.sparta.hh2stagram.domain.user.dto.LoginRequestDto;
+import com.sparta.hh2stagram.domain.user.entity.UserRoleEnum;
+import com.sparta.hh2stagram.global.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // 로그인 정보를 이용하여 UsernamePasswordAuthenticationToken 생성하여 반환
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            requestDto.getEmail(),
+                            requestDto.getLoginId(),
                             requestDto.getPassword(),
                             null
                     )
@@ -61,7 +61,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String nickname = (((UserDetailsImpl) authResult.getPrincipal()).getUser().getNickname());
 
         // JWT 토큰 생성
-        String token = jwtUtil.createToken(email, role);
+        String token = jwtUtil.createAccessToken(email, role);
+
         // HTTP 응답 헤더에 JWT 토큰 추가
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
@@ -97,11 +98,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 로그인 실패 메시지를 로그에 출력
         log.info("로그인 실패: {}", failed.getMessage());
-
-//        // 포스트맨으로 "로그인을 실패했습니다" 메시지 보내기
-//        response.getWriter().write("로그인을 실패했습니다");
-//        response.getWriter().flush();
-//        //utf8 인코딩을 하면 ??? 없어진다.
-////        response.encoding?
     }
 }

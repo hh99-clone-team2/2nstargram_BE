@@ -1,7 +1,7 @@
 package com.sparta.hh2stagram.global.security;
 
-import com.sparta.balance.domain.user.entity.User;
-import com.sparta.balance.domain.user.entity.UserRoleEnum;
+import com.sparta.hh2stagram.domain.user.entity.User;
+import com.sparta.hh2stagram.domain.user.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private final com.sparta.balance.domain.user.entity.User user;
+    private final User user;
 
     public UserDetailsImpl(User user) {
         this.user = user;
@@ -28,7 +28,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.getNickname();
     }
 
     @Override

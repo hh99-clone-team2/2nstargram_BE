@@ -1,2 +1,4 @@
-package com.sparta.hh2stagram.domain.post.controller;public class PostController {
+package com.sparta.hh2stagram.domain.post.controller;
+
+public class PostController {
 }

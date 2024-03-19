@@ -1,4 +1,4 @@
-package com.sparta.hh2stagram.global.dto;
+package com.sparta.hh2stagram.global.refreshToken.dto;
 
 import lombok.Getter;
 
