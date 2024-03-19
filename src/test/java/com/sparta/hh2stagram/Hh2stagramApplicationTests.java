@@ -33,7 +33,7 @@ class LikesControllerTest {
         Long postId = 1L;
         Long userId = 1L;
 
-        // 좋아요 추가 요청을 보냅니다.
+        // 좋아요 추가 요청을 보냅니다
         mockMvc.perform(MockMvcRequestBuilders.post("/api/posts/{postId}/likes?userId={userId}", postId, userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
