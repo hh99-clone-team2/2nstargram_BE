@@ -2,25 +2,25 @@ package com.sparta.hh2stagram.domain.post.entity;
 
 import com.sparta.hh2stagram.domain.comment.entity.Comment;
 import com.sparta.hh2stagram.domain.user.entity.User;
+import com.sparta.hh2stagram.global.refreshToken.entity.Timestamped;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 @Entity
 @Table(name = "posts")
-public class Post {
+public class Post extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
+    @Column (length = 2200, nullable = true)
     private String contents;
 
     @ManyToOne(cascade = CascadeType.ALL)

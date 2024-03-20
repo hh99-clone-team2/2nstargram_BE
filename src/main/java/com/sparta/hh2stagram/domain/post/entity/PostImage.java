@@ -6,6 +6,7 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Entity
 @ToString
@@ -21,6 +22,7 @@ public class PostImage {
 
     private String s3name;
 
+    // null이면 안된다
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)

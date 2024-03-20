@@ -22,4 +22,5 @@ public abstract class Timestamped {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime modifiedAt;
+
 }
