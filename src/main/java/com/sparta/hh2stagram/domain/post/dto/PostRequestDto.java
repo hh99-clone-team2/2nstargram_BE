@@ -25,22 +25,26 @@ public class PostRequestDto {
                     .user(user)
                     .build();
         }
+
+        public void setContents(String contents) {
+            this.contents = contents;
+        }
     }
 
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    @Builder
-//    @Getter
-//    public static class UpdatePostRequestDto {
-//
-//        @Schema (description = "정보 수정", example = "문구를 입력하세요...")
-//        private String contents;
-//
-//        public Post toEntity(User user) {
-//            return Post.builder()
-//                    .contents(this.contents)
-//                    .user(user)
-//                    .build();
-//        }
-//    }
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Getter
+    public static class UpdatePostRequestDto {
+
+        @Schema (description = "정보 수정", example = "문구를 입력하세요...")
+        private String contents;
+
+        public Post toEntity(User user) {
+            return Post.builder()
+                    .contents(this.contents)
+                    .user(user)
+                    .build();
+        }
+    }
 }
