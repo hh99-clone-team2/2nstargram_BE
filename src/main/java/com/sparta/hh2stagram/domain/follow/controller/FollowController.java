@@ -32,7 +32,7 @@ public class FollowController {
     @Operation(summary = "팔로우", description = "팔로우 추가")
     @ApiResponse(responseCode = "200", description = "팔로우 성공")
     @PostMapping("/user/follow/{userId}")
-    public ResponseEntity follow(@PathVariable Long userId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> follow(@PathVariable Long userId, @AuthenticationPrincipal UserDetails userDetails) {
         User fromUser = userService.findByUsername(userDetails.getUsername()); // 현재 사용자 정보 가져오기
         User toUser = userService.findById(userId); // 팔로우할 대상 사용자 정보 가져오기
         followService.follow(fromUser, toUser); // FollowService의 follow 메소드 호출
