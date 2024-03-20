@@ -6,6 +6,7 @@ import com.sparta.hh2stagram.domain.user.dto.UserResponseDto;
 import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.entity.UserRoleEnum;
 import com.sparta.hh2stagram.domain.user.repository.UserRepository;
+import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import com.sparta.hh2stagram.global.jwt.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,6 +56,16 @@ public class UserService {
         User user = new User(requestDto.getLoginId(), requestDto.getLoginId(),requestDto.getPassword(), requestDto.getName(), requestDto.getNickname());
 
         userRepository.save(user);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomApiException("User not found with id: " + id));
     }
 
     public UserResponseDto loginUser(LoginRequestDto requestDto) {
