@@ -2,6 +2,8 @@ package com.sparta.hh2stagram.domain.post.service;
 
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.CreatePostRequestDto;
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.UpdatePostRequestDto;
+import com.sparta.hh2stagram.domain.post.dto.PostResponseDto;
+import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.AllPostResponseDto;
 import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.CreatePostResponseDto;
 import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.UpdatePostResponseDto;
 import com.sparta.hh2stagram.domain.post.entity.Post;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -74,7 +77,21 @@ public class PostService {
 
     }
 
+    // 게시글 전체 조회
+    public List<PostResponseDto.AllPostResponseDto> getPost() {
+        // 모든 게시글을 조회합니다.
+        List<Post> allPosts = postRepository.findAll();
 
+        // 만약 게시글이 존재하지 않는다면 CustomApiException을 던집니다.
+        if (allPosts.isEmpty()) {
+            throw new CustomApiException(ErrorCode.NOT_EXIST_POST);
+        }
+
+        // 전체 게시글 목록을 AllPostResponseDto로 변환하여 반환합니다.
+        return allPosts.stream()
+                .map(AllPostResponseDto::new)
+                .collect(Collectors.toList());
+    }
 
     // AW3 관련 자료
     private void saveImgToS3(List<MultipartFile> multipartFileList, Post post, List<String> updateImageUrlList, List<String> updateImageNameList) throws IOException {

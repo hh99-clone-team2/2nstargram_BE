@@ -2,6 +2,7 @@ package com.sparta.hh2stagram.domain.post.controller;
 
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.CreatePostRequestDto;
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.UpdatePostRequestDto;
+import com.sparta.hh2stagram.domain.post.dto.PostResponseDto;
 import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.CreatePostResponseDto;
 import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.UpdatePostResponseDto;
 import com.sparta.hh2stagram.domain.post.service.PostService;
@@ -68,6 +69,13 @@ public class PostController {
 
     }
 
-
+    // 게시글 전체 조회
+    @Operation(summary = "게시글 전체 조회",
+                description = "postId를 통한 게시글 상세 조회")
+    @GetMapping(value = "/posts")
+    public ResponseEntity<?> getPost () throws IOException {
+        List<PostResponseDto.AllPostResponseDto> responseDtoList = postService.getPost();
+        return  ResponseEntity.ok().body(ResponseDto.success("게시글 전체 조회", responseDtoList));
+    }
 
 }
