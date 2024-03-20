@@ -7,6 +7,7 @@ import com.sparta.hh2stagram.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class UserController {
     @Operation(summary = "로그인", description = "회원 이메일 또는 휴대폰 번호, 비밀번호를 입력해 로그인할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "로그인 완료")
     /*로그인 기능 호출*/
-    ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(requestDto));
+    ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(requestDto, response));
     }
 }
