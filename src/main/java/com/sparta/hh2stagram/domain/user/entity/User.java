@@ -32,7 +32,7 @@ public class User {
     @Column
     private String password;
 
-    @Schema(description = "사용자 이름 입니다.", example = "홍길동")
+    @Schema(description = "성명 입니다.", example = "홍길동")
     @Column
     private String name;
 
