@@ -55,6 +55,19 @@ public class PostController {
         return ResponseEntity.ok().body(ResponseDto.success("게시물이 수정되었습니다.", requestDto1));
     }
 
+    // 게시글 삭제
+    @Operation(summary = "삭제",
+                description = "유저 정보가 일치할 경우, 게시글 삭제 가능")
+    @DeleteMapping(value = "/posts/{postId}")
+    public ResponseEntity<?> deletePost (@PathVariable Long postId,
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException{
+
+        postService.deletePost(postId, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ResponseDto.success("게시물이 삭제되었습니다.", null));
+
+    }
+
 
 
 }
