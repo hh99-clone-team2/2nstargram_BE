@@ -5,6 +5,7 @@ import com.sparta.hh2stagram.domain.user.dto.SignupRequestDto;
 import com.sparta.hh2stagram.domain.user.dto.UserResponseDto;
 import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.repository.UserRepository;
+import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import com.sparta.hh2stagram.global.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,16 @@ public class UserService {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomApiException("User not found with username: " + username));
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomApiException("User not found with id: " + id));
     }
 
     /*

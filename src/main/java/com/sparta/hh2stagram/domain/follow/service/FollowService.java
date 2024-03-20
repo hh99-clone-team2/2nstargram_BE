@@ -6,11 +6,8 @@ import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.repository.UserRepository;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j(topic = "팔로우 서비스")
 @Service
