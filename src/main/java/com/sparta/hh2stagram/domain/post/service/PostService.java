@@ -42,19 +42,16 @@ public class PostService {
         List<String> createImageNameList = new ArrayList<>();
 
         Post post = requestDto.toEntity(user);
-//
-        saveImgToS3(multipartFileList, post, createImageUrlList, createImageNameList);
 
         Post savedPost = postRepository.save(post);
+        log.info("게시물 데이터베이스 저장 완료");
+
+        saveImgToS3(multipartFileList, post, createImageUrlList, createImageNameList);
+
         return new CreatePostResponseDto(savedPost, createImageUrlList, createImageNameList);
-//        return new CreatePostResponseDto(savedPost);
     }
 
-    // 게시글 수정
 
-    // 게시글 삭제
-
-    // 게시글 전체 조회
 
     // AW3 관련 자료
     private void saveImgToS3(List<MultipartFile> multipartFileList, Post post, List<String> updateImageUrlList, List<String> updateImageNameList) throws IOException {
