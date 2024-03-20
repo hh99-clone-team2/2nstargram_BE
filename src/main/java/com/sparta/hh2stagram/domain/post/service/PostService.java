@@ -1,7 +1,9 @@
 package com.sparta.hh2stagram.domain.post.service;
 
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.CreatePostRequestDto;
+import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.UpdatePostRequestDto;
 import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.CreatePostResponseDto;
+import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.UpdatePostResponseDto;
 import com.sparta.hh2stagram.domain.post.entity.Post;
 import com.sparta.hh2stagram.domain.post.entity.PostImage;
 import com.sparta.hh2stagram.domain.post.repository.PostImageRepository;
@@ -49,6 +51,17 @@ public class PostService {
         saveImgToS3(multipartFileList, post, createImageUrlList, createImageNameList);
 
         return new CreatePostResponseDto(savedPost, createImageUrlList, createImageNameList);
+    }
+
+    // 게시물 수정 (글만 수정)
+    public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto requestDto,  User user) {
+
+        Post post = (Post) postRepository.findByIdAndUser(postId, user)
+                .orElseThrow(() -> new CustomApiException(ErrorCode.NOT_EXIST_POST));
+
+        post.update(requestDto);
+
+        return new UpdatePostResponseDto(post);
     }
 
 

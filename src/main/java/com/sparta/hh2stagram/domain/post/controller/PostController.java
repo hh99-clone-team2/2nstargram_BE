@@ -1,7 +1,9 @@
 package com.sparta.hh2stagram.domain.post.controller;
 
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.CreatePostRequestDto;
+import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.UpdatePostRequestDto;
 import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.CreatePostResponseDto;
+import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.UpdatePostResponseDto;
 import com.sparta.hh2stagram.domain.post.service.PostService;
 import com.sparta.hh2stagram.global.refreshToken.dto.ResponseDto;
 import com.sparta.hh2stagram.global.security.UserDetailsImpl;
@@ -12,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -42,6 +41,20 @@ public class PostController {
 
         return ResponseEntity.ok().body(ResponseDto.success("게시물이 공유되었습니다.", responseDto));
     }
+
+    // 게시글 수정
+    @Operation(summary = "수정",
+                description = "정보 수정 : contents")
+    @PatchMapping(value = "/posts/{postId}")
+    public ResponseEntity<?> updatePost(@RequestBody UpdatePostRequestDto requestDto,
+                                        @PathVariable Long postId,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
+        UpdatePostResponseDto requestDto1 = postService.updatePost(postId, requestDto, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ResponseDto.success("게시물이 수정되었습니다.", requestDto1));
+    }
+
 
 
 }
