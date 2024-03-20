@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Like Controller", description = "좋아요 기능 컨트롤러")
@@ -25,9 +27,9 @@ public class LikesController {
     @Operation(summary = "게시글 좋아요", description = "게시글 좋아요를 추가/취소")
     @ApiResponse(responseCode = "200", description = "게시글 좋아요 추가/취소 성공")
     @PostMapping("/posts/{postId}/likes")
-    public ResponseEntity<String> likeChoice(@PathVariable Long postId, @RequestParam Long userId) {
+    public ResponseEntity<String> likeChoice(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
-        String message =likesService.likeOrUnlikePost(postId, userId);
+        String message =likesService.likeOrUnlikePost(postId,userDetails);
 
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }

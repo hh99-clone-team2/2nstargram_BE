@@ -32,4 +32,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImage> postImageList;
+
+    // 테스트를 위해 생성 -> 추후 삭제
+    public Post(Long id) {
+        this.id = id;
+    }
 }
