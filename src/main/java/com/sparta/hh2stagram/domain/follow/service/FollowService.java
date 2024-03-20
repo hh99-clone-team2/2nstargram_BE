@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Slf4j(topic = "팔로우 서비스")
 @Service
 public class FollowService {
@@ -35,6 +38,29 @@ public class FollowService {
                 .build();
         followRepository.save(follow);
         return "Success";
+    }
+
+    @Transactional
+    public String unfollow(User fromUser, User toUser) {
+        // 자기 자신 unfollow 안됨
+        if (fromUser.equals(toUser)) {
+            throw new CustomApiException("자기 자신은 unfollow 할 수 없습니다.");
+        }
+        // 언팔로우 시도한 팔로우 관계 찾기
+        Optional<Follow> existingFollow = followRepository.findFollow(fromUser, toUser);
+        if (existingFollow.isEmpty()) {
+            throw new CustomApiException("이미 unfollow 되어있습니다.");
+        }
+        followRepository.delete(existingFollow.get());
+        return "언팔로우 되었습니다.";
+    }
+
+    public List<Follow> getFollowingList(User user) {
+        return followRepository.findByFollower(user);
+    }
+
+    public List<Follow> getFollowerList(User user) {
+        return followRepository.findByFollowing(user);
     }
 }
 
