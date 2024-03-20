@@ -63,6 +63,15 @@ public class CustomExceptionHandler {
         return ResponseDto.fail(e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseDto<?> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error("handlIllegalArgumentException", e);
+        return ResponseDto.fail(e.getMessage());
+    }
+
+
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseDto<?> handleException(Exception e) {

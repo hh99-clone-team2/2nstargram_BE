@@ -3,9 +3,6 @@ package com.sparta.hh2stagram.domain.user.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,21 +36,21 @@ public class User {
     @Column
     private String name;
 
-    @Schema(description = "닉네임 입니다.", example = "르탄이")
+    @Schema(description = "사용자 이름 입니다.", example = "rtan")
     @Column(unique = true)
-    private String nickname;
+    private String username;
 
     @Schema(description = "유저 권한", example = "USER")
     @Enumerated(value = EnumType.STRING)
     @Column
-    private UserRoleEnum role;
+    private UserRoleEnum role = UserRoleEnum.USER;
 
     @Builder
-    public User(String email, String phoneNumber, String password,String name,String nickname) {
+    public User(String email, String phoneNumber, String password,String name,String username) {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.name = name;
-        this.nickname = nickname;
+        this.username = username;
     }
 }
