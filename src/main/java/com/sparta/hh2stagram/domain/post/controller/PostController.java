@@ -43,20 +43,5 @@ public class PostController {
         return ResponseEntity.ok().body(ResponseDto.success("게시물이 공유되었습니다.", responseDto));
     }
 
-    // 게시글 수정
-//    @Operation(summary = "수정",
-//                description = "정보 수정 : contents")
-//    @PutMapping (value = "/posts/{postId}")
-//    public ResponseEntity<?> updatePost(PostsRequestDto requestDto) throws IOException {
-//
-//        PostsRequestDto requestDto1 = postService.updatePost(requestDto);
-//
-//        return ResponseEntity.ok().body(ResponseDto.success("게시물이 수정되었습니다.", requestDto1));
-//    }
-
-    // 게시글 삭제
-
-    // 게시글 전체 조회
-
 
 }
