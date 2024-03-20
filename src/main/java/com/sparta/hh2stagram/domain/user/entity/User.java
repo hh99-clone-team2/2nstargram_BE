@@ -48,6 +48,7 @@ public class User {
     @Column
     private UserRoleEnum role;
 
+
     @Builder
     public User(String email, String phoneNumber, String password,String name,String nickname) {
         this.email = email;
