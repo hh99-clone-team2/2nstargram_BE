@@ -64,6 +64,16 @@ public class PostService {
         return new UpdatePostResponseDto(post);
     }
 
+    // 게시물 삭제 //게시물을 삭제할까요? 이 게시물을 삭제하시겠어요?
+    public void deletePost(Long postId, User user) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(()-> new CustomApiException(ErrorCode.NOT_EXIST_POST));
+
+        postRepository.delete(post);
+
+    }
+
 
 
     // AW3 관련 자료
