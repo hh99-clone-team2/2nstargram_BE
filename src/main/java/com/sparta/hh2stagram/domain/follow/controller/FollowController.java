@@ -1,5 +1,6 @@
 package com.sparta.hh2stagram.domain.follow.controller;
 
+import com.sparta.hh2stagram.domain.follow.dto.FollowResponseDto;
 import com.sparta.hh2stagram.domain.follow.entity.Follow;
 import com.sparta.hh2stagram.domain.follow.service.FollowService;
 import com.sparta.hh2stagram.domain.user.entity.User;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -49,21 +51,20 @@ public class FollowController {
         return ResponseEntity.ok("언팔로우 되었습니다.");
     }
 
-    @Operation(summary = "팔로잉 목록 조회", description = "팔로잉 목록 조회")
-    @ApiResponse(responseCode = "200", description = "팔로잉 목록 조회 성공")
+    @Operation(summary = "Search following list", description = "Search following list")
+    @ApiResponse(responseCode = "200", description = "Following list view successful")
     @GetMapping("/user/{userId}/following")
-    public ResponseEntity<List<Follow>> getFollowingList(@PathVariable Long userId) {
-        User user = userService.findById(userId); // 조회할 사용자 정보 가져오기
-        List<Follow> followingList = followService.getFollowingList(user); // 팔로잉 목록 조회
+    public ResponseEntity<List<FollowResponseDto>> getFollowingList(@PathVariable Long userId) {
+        List<FollowResponseDto> followingList = followService.getFollowingList(userId);
         return ResponseEntity.ok(followingList);
     }
 
     @Operation(summary = "팔로워 목록 조회", description = "팔로워 목록 조회")
     @ApiResponse(responseCode = "200", description = "팔로워 목록 조회 성공")
     @GetMapping("/user/{userId}/follower")
-    public ResponseEntity<List<Follow>> getFollowerList(@PathVariable Long userId) {
+    public ResponseEntity<List<FollowResponseDto>> getFollowerList(@PathVariable Long userId) {
         User user = userService.findById(userId); // 조회할 사용자 정보 가져오기
-        List<Follow> followerList = followService.getFollowerList(user); // 팔로워 목록 조회
+        List<FollowResponseDto> followerList = followService.getFollowerList(userId); // 팔로워 목록 조회
         return ResponseEntity.ok(followerList);
     }
 }

@@ -1,34 +1,38 @@
 package com.sparta.hh2stagram.domain.follow.service;
 
+import com.sparta.hh2stagram.domain.follow.dto.FollowResponseDto;
 import com.sparta.hh2stagram.domain.follow.entity.Follow;
 import com.sparta.hh2stagram.domain.follow.repository.FollowRepository;
 import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.repository.UserRepository;
+import com.sparta.hh2stagram.domain.user.service.UserService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j(topic = "팔로우 서비스")
 @Service
 public class FollowService {
 
     private final FollowRepository followRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public FollowService(FollowRepository followRepository, UserRepository userRepository) {
+    public FollowService(FollowRepository followRepository, UserService userService) {
         this.followRepository = followRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Transactional
-    public String follow(User fromUser, User toUser){
+    public String follow(User fromUser, User toUser) {
         // 자기 자신 follow 안됨
         if (fromUser == toUser)
-            throw new CustomApiException( "자기 자신은 follow 할 수 없습니다.");
+            throw new CustomApiException("자기 자신은 follow 할 수 없습니다.");
         // 중복 follow x
         if (followRepository.findFollow(fromUser, toUser).isPresent())
             throw new CustomApiException("이미 follow 되어있습니다.");
@@ -55,43 +59,30 @@ public class FollowService {
         return "언팔로우 되었습니다.";
     }
 
-    public List<Follow> getFollowingList(User user) {
-        return followRepository.findByFollower(user);
+    public List<FollowResponseDto> getFollowingList(Long userId) {
+        User follower = userService.findById(userId);
+        List<Follow> follows = followRepository.findByFollower(follower);
+        return follows.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Follow> getFollowerList(User user) {
-        return followRepository.findByFollowing(user);
+    public List<FollowResponseDto> getFollowerList(Long userId){
+        User following = userService.findById(userId);
+        List<Follow> follows = followRepository.findByFollowing(following);
+        return follows.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
+
+    private FollowResponseDto convertToDto(Follow follow) {
+        return new FollowResponseDto(
+                follow.getId(),
+                follow.getFollower().getId(),
+                follow.getFollower().getUsername(),
+                follow.getFollowing().getId(),
+                follow.getFollowing().getUsername()
+        );
+
+        }
 }
-
-//    @Transactional
-//    public String followOrUnfollowUser(Long followerId, Long followingId, UserDetails userDetails) {
-//
-//        /*사용자 검증*/
-//        User user = userRepository.findByEmail(userDetails.getUsername())
-//                .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다"));
-//        // Find the follower and followee users
-//        User follower = userRepository.findById(followerId)
-//                .orElseThrow(() -> new CustomApiException("팔로워를 찾을 수 없습니다.: " + followerId));
-//
-//        User following = userRepository.findById(followingId)
-//                .orElseThrow(() -> new CustomApiException("팔로우할 사용자를 찾을 수 없습니다.: " + followingId));
-//
-//        // Check if the follow relationship already exists
-//        Optional<Follow> existingFollow = followRepository.findByFollowerAndFollowing(follower, following);
-//
-//        if (existingFollow.isPresent()) {
-//            // If the follow relationship exists, delete it (unfollow)
-//            followRepository.delete(existingFollow.get());
-//            return "언팔로우 되었습니다.";
-//        } else {
-//            // If the follow relationship does not exist, create it (follow)
-//            Follow newFollow = Follow.builder()
-//                    .follower(follower)
-//                    .following(following)
-//                    .build();
-//            followRepository.save(newFollow);
-//            return "팔로우 되었습니다.";
-//        }
-//    }
-//}

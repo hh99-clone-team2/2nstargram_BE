@@ -51,12 +51,6 @@ public class User {
     @Column
     private UserRoleEnum role = UserRoleEnum.USER;
 
-    /* 팔로우 관련 */
-    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
-    private List<Follow> followings;
-
-    @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
-    private List<Follow> followers;
 
     @Builder
     public User(String email, String phoneNumber, String password,String name,String username) {
