@@ -39,22 +39,21 @@ public class User {
     @Column
     private String name;
 
-    @Schema(description = "닉네임 입니다.", example = "르탄이")
+    @Schema(description = "사용자 이름 입니다.", example = "rtan")
     @Column(unique = true)
-    private String nickname;
+    private String username;
 
     @Schema(description = "유저 권한", example = "USER")
     @Enumerated(value = EnumType.STRING)
     @Column
-    private UserRoleEnum role;
-
+    private UserRoleEnum role = UserRoleEnum.USER;
 
     @Builder
-    public User(String email, String phoneNumber, String password,String name,String nickname) {
+    public User(String email, String phoneNumber, String password,String name,String username) {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.name = name;
-        this.nickname = nickname;
+        this.username = username;
     }
 }
