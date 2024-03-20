@@ -8,6 +8,7 @@ import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.repository.UserRepository;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +34,12 @@ public class LikesService {
     }
 
     @Transactional
-    public String likeOrUnlikePost(Long postId, Long userId) {
+    public String likeOrUnlikePost(Long postId, UserDetails userDetails) {
         /*유저 정보, 게시물 정보 확인 후 좋아요 정보 저장
          * 에러 발생 시 rollback*/
         /*사용자 검증*/
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다.: " + userId));
-
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다"));
         /*게시물 검증*/
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomApiException("게시물을 찾을 수 없습니다.: " + postId));
