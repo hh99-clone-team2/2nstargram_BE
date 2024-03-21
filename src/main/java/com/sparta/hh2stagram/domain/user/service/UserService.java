@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j(topic = "회원가입, 로그인 서비스 로직")
@@ -51,7 +52,7 @@ public class UserService {
      * 비밀번호 검증, 암호화 처리
      * email 중복 여부 확인*/
     @Transactional
-    public void signupUser(SignupRequestDto requestDto) {
+    public Map<String, String> signupUser(SignupRequestDto requestDto) {
         String email = null;
         String phoneNumber = null;
 
@@ -100,6 +101,8 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+
+        return Map.of("msg", "회원가입이 완료되었습니다.");
     }
 
     /*
