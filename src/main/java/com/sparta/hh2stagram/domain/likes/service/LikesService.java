@@ -38,7 +38,7 @@ public class LikesService {
         /*유저 정보, 게시물 정보 확인 후 좋아요 정보 저장
          * 에러 발생 시 rollback*/
         /*사용자 검증*/
-        User user = userRepository.findByEmail(userDetails.getUsername())
+        User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다"));
         /*게시물 검증*/
         Post post = postRepository.findById(postId)

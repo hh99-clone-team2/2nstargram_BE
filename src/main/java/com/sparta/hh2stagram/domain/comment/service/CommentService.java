@@ -27,7 +27,7 @@ public class CommentService {
     /* 댓글 추가 */
     @Transactional
     public CommentResponseDto addComment(Long postId, CommentRequestDto commentRequestDto, UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
+        User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다"));
 
         Post post = postRepository.findById(postId)
@@ -37,6 +37,9 @@ public class CommentService {
         comment = commentRepository.save(comment);
 
         return CommentResponseDto.builder()
+                .postId(postId)
+                .userId(user.getId())
+                .commentId(comment.getId())
                 .username(user.getUsername())
                 .content(comment.getContent())
                 .build();
@@ -45,7 +48,7 @@ public class CommentService {
     /* 댓글 조회 */
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getComment(Long postId, UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
+        User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다"));
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomApiException("게시물을 찾을 수 없습니다"));
@@ -54,6 +57,9 @@ public class CommentService {
 
         List<CommentResponseDto> responseDtos = comments.stream()
                 .map(comment -> CommentResponseDto.builder()
+                        .postId(postId)
+                        .userId(user.getId())
+                        .commentId(comment.getId())
                         .username(comment.getUser().getUsername())
                         .content(comment.getContent())
                         .build())
@@ -69,7 +75,7 @@ public class CommentService {
         if (userDetails == null) {
             throw new CustomApiException("사용자 정보가 유효하지 않습니다");
         }
-        User user = userRepository.findByEmail(userDetails.getUsername())
+        User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다"));
 
 
@@ -86,6 +92,9 @@ public class CommentService {
         Comment updatedComment = commentRepository.save(comment);
 
         return CommentResponseDto.builder()
+                .postId(postId)
+                .userId(user.getId())
+                .commentId(commentId)
                 .username(user.getUsername())
                 .content(updatedComment.getContent())
                 .build();
@@ -100,7 +109,7 @@ public class CommentService {
 
 
         String username = userDetails.getUsername();
-        User currentUser = userRepository.findByEmail(username)
+        User currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomApiException("사용자를 찾을 수 없습니다."));
 
 
