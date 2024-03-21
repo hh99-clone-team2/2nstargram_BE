@@ -84,22 +84,4 @@ public class PostController {
         List<PostResponseDto.AllPostResponseDto> responseDtoList = postService.getPost();
         return  ResponseEntity.ok().body(ResponseDto.success("게시글 전체 조회", responseDtoList));
     }
-
-//    산하님
-//    @Operation(summary = "팔로우한 유저의 게시글 조회",
-//            description = "팔로우한 유저의 게시글을 조회합니다.")
-//    @GetMapping("/posts/{username}/{followingId}")
-//    public ResponseEntity<?> getFollowPost(@PathVariable("username") String username, @PathVariable("followingId") Long followingId,
-//                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//// 인증된 사용자의 권한 확인
-//        if (!userDetails.getUsername().equals(username)) {
-//            throw new CustomApiException("권한이 없습니다.");
-//        }
-//
-//// 팔로우한 사용자의 게시글 조회
-//        List<PostResponseDto> followedUserPosts = postService.getPostsOfFollowedUser(followingId);
-//
-//        return ResponseEntity.ok().body(followedUserPosts);
-//    }
-
 }
