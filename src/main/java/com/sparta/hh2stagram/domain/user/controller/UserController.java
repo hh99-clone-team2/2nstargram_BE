@@ -32,7 +32,7 @@ public class UserController {
     @Operation(summary = "회원 가입", description = "이메일 또는 휴대폰 번호, 비밀번호, 유저 이름을 등록합니다.")
     @ApiResponse(responseCode = "201", description = "회원 가입 완료")
     /*회원가입 기능 호출*/
-    public ResponseEntity<Void> signupUser(@RequestBody SignupRequestDto requestDto) {
+    public ResponseEntity<?> signupUser(@RequestBody SignupRequestDto requestDto) {
 
         userService.signupUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
