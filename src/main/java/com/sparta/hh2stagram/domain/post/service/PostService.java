@@ -39,7 +39,7 @@ public class PostService {
 
         if (multipartFileList == null) {
             log.error("사진을 넣어주세요.");
-            throw new CustomApiException(ErrorCode.IMAGE_EMPTY);
+            throw new CustomApiException("이미지가 존재하지 않습니다.");
         }
 
         // Front responseDto 작성용
@@ -60,7 +60,7 @@ public class PostService {
     public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto requestDto,  User user) {
 
         Post post = (Post) postRepository.findByIdAndUser(postId, user)
-                .orElseThrow(() -> new CustomApiException(ErrorCode.NOT_EXIST_POST));
+                .orElseThrow(() -> new CustomApiException("게시물이 존재하지 않습니다."));
 
         post.update(requestDto);
 
@@ -71,7 +71,7 @@ public class PostService {
     public void deletePost(Long postId, User user) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(()-> new CustomApiException(ErrorCode.NOT_EXIST_POST));
+                .orElseThrow(()-> new CustomApiException("게시물이 존재하지 않습니다."));
 
         postRepository.delete(post);
 
@@ -84,7 +84,7 @@ public class PostService {
 
         // 만약 게시글이 존재하지 않는다면 CustomApiException을 던집니다.
         if (allPosts.isEmpty()) {
-            throw new CustomApiException(ErrorCode.NOT_EXIST_POST);
+            throw new CustomApiException("게시물이 존재하지 않습니다.");
         }
 
         // 전체 게시글 목록을 AllPostResponseDto로 변환하여 반환합니다.
