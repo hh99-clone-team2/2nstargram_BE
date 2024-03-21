@@ -13,7 +13,6 @@ import com.sparta.hh2stagram.domain.post.repository.PostRepository;
 import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.global.aws.service.S3UploadService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
-import com.sparta.hh2stagram.global.handler.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,14 +36,14 @@ public class PostService {
     // 게시물 등록
     public CreatePostResponseDto createPost(CreatePostRequestDto requestDto, List<MultipartFile> multipartFileList, User user) throws IOException {
 
-        if (multipartFileList == null) {
-            log.error("사진을 넣어주세요.");
-            throw new CustomApiException(ErrorCode.IMAGE_EMPTY);
-        }
-
         // Front responseDto 작성용
         List<String> createImageUrlList = new ArrayList<>();
         List<String> createImageNameList = new ArrayList<>();
+
+        if (multipartFileList == null || multipartFileList.isEmpty()) {
+            log.error("사진을 넣어주세요.");
+            throw new CustomApiException("사진을 넣어주세요.");
+        }
 
         Post post = requestDto.toEntity(user);
 
@@ -60,7 +59,7 @@ public class PostService {
     public UpdatePostResponseDto updatePost(Long postId, UpdatePostRequestDto requestDto,  User user) {
 
         Post post = (Post) postRepository.findByIdAndUser(postId, user)
-                .orElseThrow(() -> new CustomApiException(ErrorCode.NOT_EXIST_POST));
+                .orElseThrow(() -> new CustomApiException("해당 게시물이 존재하지 않습니다."));
 
         post.update(requestDto);
 
@@ -71,7 +70,7 @@ public class PostService {
     public void deletePost(Long postId, User user) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(()-> new CustomApiException(ErrorCode.NOT_EXIST_POST));
+                .orElseThrow(()-> new CustomApiException("해당 게시물이 존재하지 않습니다."));
 
         postRepository.delete(post);
 
@@ -84,7 +83,7 @@ public class PostService {
 
         // 만약 게시글이 존재하지 않는다면 CustomApiException을 던집니다.
         if (allPosts.isEmpty()) {
-            throw new CustomApiException(ErrorCode.NOT_EXIST_POST);
+            throw new CustomApiException("해당 게시물이 존재하지 않습니다.");
         }
 
         // 전체 게시글 목록을 AllPostResponseDto로 변환하여 반환합니다.
