@@ -56,7 +56,7 @@ public class JwtUtil {
 
     /*리프레시 토큰 생성 메서드*/
     public String createRefreshToken(String email, UserRoleEnum role) {
-        long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60 * 1000L; /*14일*/
+        long REFRESH_TOKEN_TIME = 60 * 60 * 24 * 1000L; // 24시간
         Date now = new Date();
 
         return Jwts.builder()
