@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CustomApiException extends RuntimeException {
 
-    public CustomApiException(String message) {
-        super(message);
+    public CustomApiException(ErrorCode message) {
+        super(String.valueOf(message));
     }
 }
