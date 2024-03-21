@@ -117,10 +117,4 @@ public class PostService {
             updateImageNameList.add(multipartFile.getOriginalFilename());
         }
     }
-
-    // 풀리퀘스트를 하기 위한 주석 타임
-//    private void hello(){
-//        return null;
-//    }
-
 }
