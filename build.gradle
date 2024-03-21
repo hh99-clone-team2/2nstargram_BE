@@ -56,6 +56,10 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    dependencies {
+        implementation 'javax.xml.bind:jaxb-api:2.3.1' // 사용하려는 JAXB API 버전에 맞게 설정
+    }
 }
 
 tasks.named('test') {
