@@ -5,6 +5,7 @@ import com.sparta.hh2stagram.domain.user.dto.SignupRequestDto;
 import com.sparta.hh2stagram.domain.user.dto.UserResponseDto;
 import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.repository.UserRepository;
+import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import com.sparta.hh2stagram.global.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,16 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomApiException("User not found with username: " + username));
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomApiException("User not found with id: " + id));
+    }
+
     /*
      * 회원가입 로직
      * 비밀번호 검증, 암호화 처리
@@ -48,6 +59,7 @@ public class UserService {
         // 케이스 나누기(이메일, 전화번호)
         if (loginId.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
             email = loginId;
+            phoneNumber = null;
 
             /*email 중복 검사*/
             Optional<User> checkEmail = userRepository.findByEmail(email);
@@ -58,6 +70,7 @@ public class UserService {
 
         if (loginId.matches("^\\d{11}$")) {
             phoneNumber = loginId;
+            email = null;
 
             /*phone number 중복 검사*/
             Optional<User> checkPhone = userRepository.findByPhoneNumber(phoneNumber);
