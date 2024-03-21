@@ -45,7 +45,7 @@ public class CommentService {
                 .build();
     }
 
-    /* 댓글 조회 */
+    /* 댓글 조회  */
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getComment(Long postId, UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername())
