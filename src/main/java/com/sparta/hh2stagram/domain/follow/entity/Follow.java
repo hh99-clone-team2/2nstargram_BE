@@ -26,7 +26,6 @@ public class Follow {
     @JoinColumn(name = "following_id")
     private User following;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
