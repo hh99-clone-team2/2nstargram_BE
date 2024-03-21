@@ -51,8 +51,8 @@ public class FollowController {
         return ResponseEntity.ok("언팔로우 되었습니다.");
     }
 
-    @Operation(summary = "Search following list", description = "Search following list")
-    @ApiResponse(responseCode = "200", description = "Following list view successful")
+    @Operation(summary = "팔로잉 목록 조회", description = "팔로잉 목록 조회")
+    @ApiResponse(responseCode = "200", description = "팔로워 목록 조회 성공")
     @GetMapping("/user/{userId}/following")
     public ResponseEntity<List<FollowResponseDto>> getFollowingList(@PathVariable Long userId) {
         List<FollowResponseDto> followingList = followService.getFollowingList(userId);
