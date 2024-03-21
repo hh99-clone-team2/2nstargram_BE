@@ -116,5 +116,6 @@ public class PostService {
             updateImageUrlList.add(imageUrl);
             updateImageNameList.add(multipartFile.getOriginalFilename());
         }
+        //
     }
 }
