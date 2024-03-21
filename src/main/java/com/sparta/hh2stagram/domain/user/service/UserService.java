@@ -48,6 +48,7 @@ public class UserService {
         // 케이스 나누기(이메일, 전화번호)
         if (loginId.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
             email = loginId;
+            phoneNumber = null;
 
             /*email 중복 검사*/
             Optional<User> checkEmail = userRepository.findByEmail(email);
@@ -58,6 +59,7 @@ public class UserService {
 
         if (loginId.matches("^\\d{11}$")) {
             phoneNumber = loginId;
+            email = null;
 
             /*phone number 중복 검사*/
             Optional<User> checkPhone = userRepository.findByPhoneNumber(phoneNumber);
