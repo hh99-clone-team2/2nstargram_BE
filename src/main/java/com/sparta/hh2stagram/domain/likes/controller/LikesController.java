@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Like Controller", description = "좋아요 기능 컨트롤러")
 @Slf4j(topic = "좋아요")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/likes")
 public class LikesController {
 
     /* LikeService : 좋아요 기능 서비스
@@ -26,7 +26,7 @@ public class LikesController {
 
     @Operation(summary = "게시글 좋아요", description = "게시글 좋아요를 추가/취소")
     @ApiResponse(responseCode = "200", description = "게시글 좋아요 추가/취소 성공")
-    @PostMapping("/posts/{postId}/likes")
+    @PostMapping("/{postId}/like")
     public ResponseEntity<String> likeChoice(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
         String message =likesService.likeOrUnlikePost(postId,userDetails);
