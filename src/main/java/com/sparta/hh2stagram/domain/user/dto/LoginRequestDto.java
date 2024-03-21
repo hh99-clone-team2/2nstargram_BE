@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 public class LoginRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "이메일 또는 전화번호 또는 사용자 이름")
     private String loginId;
 
     @NotBlank
