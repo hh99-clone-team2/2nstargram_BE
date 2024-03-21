@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,41 +24,48 @@ public class PostResponseDto {
         private Long id;
 
         private String contents;
-
         private List<String> imageName;
         private List<String> imageUrlList;
         private List<PostImageResponseDto> postImageList = new ArrayList<>();
 
         private LocalDateTime createdAt;
-//        private String formattedTime;
+        private String formattedTime;
 
         public CreatePostResponseDto(Post post, List<String> urlList, List<String> nameList) {
 
-
             this.id = post.getId();
             this.contents = post.getContents();
-            this.imageName = nameList;
-            this.imageUrlList = urlList;
+            this.imageName = nameList != null ? nameList : new ArrayList<>();
+            this.imageUrlList = urlList != null ? urlList : new ArrayList<>();
+
             this.createdAt = post.getCreatedAt();
-//            this.formattedTime = formatCreatedAt(post.getCreatedAt());
+            this.formattedTime = formatCreatedAt(post.getCreatedAt());
         }
 
         // 생성된 시간을 포맷하는 메서드
-//        private String formatCreatedAt(LocalDateTime createdAt) {
-//            LocalDateTime now = LocalDateTime.now();
-//            long hoursPassed = createdAt.until(now, ChronoUnit.HOURS);
-//
-//            // 시간 간격이 24시간 이하인 경우 시간을 포맷하여 반환
-//            if (hoursPassed <= 24) {
-//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH시간");
-//                return createdAt.format(formatter);
-//            }
-//            // 시간 간격이 24시간 이상인 경우 등록된 년/월/일을 반환
-//            else {
-//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
-//                return createdAt.format(formatter);
-//            }
-//        }
+        private String formatCreatedAt(LocalDateTime createdAt) {
+            LocalDateTime now = LocalDateTime.now();
+            long hoursPassed = createdAt.until(now, ChronoUnit.HOURS);
+
+            // 시간 간격이 24시간 이하인 경우
+            if (hoursPassed <= 0) {
+                long minutesPassed = createdAt.until(now, ChronoUnit.MINUTES);
+                if (minutesPassed <= 1) {
+                    return "방금 전";
+                } else {
+                    return minutesPassed + "분 전";
+                }
+            }
+            // 시간 간격이 24시간 이상인 경우
+            else if (hoursPassed < 24) {
+                return hoursPassed + "시간 전";
+            }
+            // 24시간 이상인 경우
+            else {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+                return createdAt.format(formatter);
+            }
+        }
     }
 
     // 게시물 수정
@@ -71,26 +80,14 @@ public class PostResponseDto {
         private List<String> imageName;
         private List<String> imageUrlList;
         private List<PostImageResponseDto> postImageList = new ArrayList<>();
-        private LocalDateTime createdAt;
+
         private LocalDateTime modifiedAt;
 
-        public UpdatePostResponseDto(Post post, List<String> urlList, List<String> nameList) {
-            this.id = post.getId();
-
-            this.contents = post.getContents();
-
-            this.imageUrlList = urlList;
-            this.imageName = nameList;
-            this.createdAt = post.getCreatedAt();
-            this.modifiedAt = post.getModifiedAt();
-        }
         public UpdatePostResponseDto(Post post) {
             this.id = post.getId();
-
             this.contents = post.getContents();
 
             this.postImageList = post.getPostImageList().stream().map(PostImageResponseDto::new).toList();
-            this.createdAt = post.getCreatedAt();
             this.modifiedAt = post.getModifiedAt();
         }
 
