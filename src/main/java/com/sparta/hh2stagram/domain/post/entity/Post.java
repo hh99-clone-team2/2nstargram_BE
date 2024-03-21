@@ -37,9 +37,4 @@ public class Post extends Timestamped {
     public void update(UpdatePostRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }
-
-    // 테스트를 위해 생성 -> 추후 삭제
-    public Post(Long id) {
-        this.id = id;
-    }
 }

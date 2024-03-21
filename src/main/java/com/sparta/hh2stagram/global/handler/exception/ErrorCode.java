@@ -1,7 +1,6 @@
 package com.sparta.hh2stagram.global.handler.exception;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
