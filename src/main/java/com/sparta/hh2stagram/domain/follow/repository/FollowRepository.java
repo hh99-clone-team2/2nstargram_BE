@@ -10,12 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-    List<Follow> findByFollower(User follower); // Changed to findByFollower
-    List<Follow> findByFollowing(User following);
+    List<Follow> findByFollower(User user); // Changed to findByFollower
+    List<Follow> findByFollowingUserId(Long followingId);
 
-    void deleteFollowByFollower(User follower); // Changed to deleteFollowByFollower
-    void deleteFollowByFollowing(User following);
-
-    @Query("SELECT f FROM Follow f WHERE f.follower = :from AND f.following = :to")
-    Optional<Follow> findFollow(@Param("from") User fromUser, @Param("to") User toUser);
+    @Query("SELECT f FROM Follow f WHERE f.follower = :from AND f.followingUserId = :to")
+    Optional<Follow> findFollow(@Param("from") User user, @Param("to") Long toUserId);
 }
