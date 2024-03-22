@@ -75,6 +75,7 @@ public class FollowService {
 
     private FollowResponseDto.FollowingResponseDto convertToFollowingDto(Follow following) {
         return new FollowResponseDto.FollowingResponseDto(
+                following.getId(),
                 following.getFollowingUserId(),
                 userService.findById(following.getFollowingUserId()).getUsername()
         );
@@ -82,6 +83,7 @@ public class FollowService {
 
     private FollowResponseDto.FollowerResponseDto convertToFollowerDto(Follow follower) {
         return new FollowResponseDto.FollowerResponseDto(
+                follower.getId(),
                 follower.getFollower().getId(),
                 follower.getFollower().getUsername()
         );

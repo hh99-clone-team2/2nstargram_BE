@@ -44,7 +44,7 @@ public class FollowController {
 
     @Operation(summary = "언팔로우", description = "언팔로우")
     @ApiResponse(responseCode = "200", description = "언팔로우 성공")
-    @PostMapping("/destroy/{userId}")
+    @DeleteMapping("/destroy/{userId}")
     public ResponseEntity<?> unfollow(@PathVariable Long userId, @AuthenticationPrincipal UserDetails userDetails) {
         User fromUser = userService.findByUsername(userDetails.getUsername()); // 현재 사용자 정보 가져오기
         User toUser = userService.findById(userId); // 언팔로우할 대상 사용자 정보 가져오기
