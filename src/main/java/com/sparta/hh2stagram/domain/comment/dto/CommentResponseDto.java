@@ -18,6 +18,16 @@ public class CommentResponseDto {
     private LocalDateTime createdAt;
     private String formattedTime;
 
+    public CommentResponseDto(Comment comment) {
+        this.postId = comment.getId();
+        this.userId = comment.getUser().getId();
+        this.commentId = comment.getId();
+        this.username = comment.getUser().getUsername();
+        this.content = comment.getContent();
+        this.createdAt = comment.getCreatedAt();
+        this.formattedTime = formatCreatedAt(createdAt);
+    }
+
     @Builder
     public CommentResponseDto(Long postId, Long userId, Long commentId, String username, String content, LocalDateTime createdAt) {
         this.postId = postId;
