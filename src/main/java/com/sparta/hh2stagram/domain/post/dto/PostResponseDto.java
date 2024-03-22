@@ -21,7 +21,7 @@ public class PostResponseDto {
         private String contents;
         private List<PostImageResponseDto> postImageList;
         private int likes;
-        private boolean like = false;
+        private boolean like;
         private List<Comment> commentList;
         private LocalDateTime createdAt;
 
