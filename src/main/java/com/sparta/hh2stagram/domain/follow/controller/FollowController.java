@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/friendships")
 @Tag(name = "Follow Controller", description = "팔로우 기능 컨트롤러")
 public class FollowController {
 
@@ -33,7 +33,7 @@ public class FollowController {
 
     @Operation(summary = "팔로우", description = "팔로우 추가")
     @ApiResponse(responseCode = "200", description = "팔로우 성공")
-    @PostMapping("/user/follow/{userId}")
+    @PostMapping("/create/{userId}")
     public ResponseEntity<String> follow(@PathVariable Long userId, @AuthenticationPrincipal UserDetails userDetails) {
         User fromUser = userService.findByUsername(userDetails.getUsername()); // 현재 사용자 정보 가져오기
         User toUser = userService.findById(userId); // 팔로우할 대상 사용자 정보 가져오기
@@ -43,7 +43,7 @@ public class FollowController {
 
     @Operation(summary = "언팔로우", description = "언팔로우")
     @ApiResponse(responseCode = "200", description = "언팔로우 성공")
-    @DeleteMapping("/user/follow/{userId}")
+    @DeleteMapping("/destroy/{userId}")
     public ResponseEntity<String> unfollow(@PathVariable Long userId, @AuthenticationPrincipal UserDetails userDetails) {
         User fromUser = userService.findByUsername(userDetails.getUsername()); // 현재 사용자 정보 가져오기
         User toUser = userService.findById(userId); // 언팔로우할 대상 사용자 정보 가져오기
@@ -53,18 +53,18 @@ public class FollowController {
 
     @Operation(summary = "팔로잉 목록 조회", description = "팔로잉 목록 조회")
     @ApiResponse(responseCode = "200", description = "팔로워 목록 조회 성공")
-    @GetMapping("/user/{userId}/following")
-    public ResponseEntity<List<FollowResponseDto>> getFollowingList(@PathVariable Long userId) {
-        List<FollowResponseDto> followingList = followService.getFollowingList(userId);
+    @GetMapping("/{username}/following")
+    public ResponseEntity<List<FollowResponseDto>> getFollowingList(@PathVariable String username) {
+        List<FollowResponseDto> followingList = followService.getFollowingList(username);
         return ResponseEntity.ok(followingList);
     }
 
     @Operation(summary = "팔로워 목록 조회", description = "팔로워 목록 조회")
     @ApiResponse(responseCode = "200", description = "팔로워 목록 조회 성공")
-    @GetMapping("/user/{userId}/follower")
-    public ResponseEntity<List<FollowResponseDto>> getFollowerList(@PathVariable Long userId) {
-        User user = userService.findById(userId); // 조회할 사용자 정보 가져오기
-        List<FollowResponseDto> followerList = followService.getFollowerList(userId); // 팔로워 목록 조회
+    @GetMapping("/{username}/followers")
+    public ResponseEntity<List<FollowResponseDto>> getFollowerList(@PathVariable String username) {
+        User user = userService.findByUsername(username); // 조회할 사용자 정보 가져오기
+        List<FollowResponseDto> followerList = followService.getFollowerList(username); // 팔로워 목록 조회
         return ResponseEntity.ok(followerList);
     }
 }
