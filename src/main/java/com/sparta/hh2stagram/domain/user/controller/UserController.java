@@ -4,6 +4,7 @@ import com.sparta.hh2stagram.domain.user.dto.SignupRequestDto;
 import com.sparta.hh2stagram.domain.user.dto.UserResponseDto;
 import com.sparta.hh2stagram.domain.user.dto.LoginRequestDto;
 import com.sparta.hh2stagram.domain.user.service.UserService;
+import com.sparta.hh2stagram.global.refreshToken.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,19 +36,19 @@ public class UserController {
     public ResponseEntity<?> signupUser(@RequestBody SignupRequestDto requestDto) {
 
         userService.signupUser(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.success("회원가입 완료", null));
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "회원 이메일 또는 휴대폰 번호, 비밀번호를 입력해 로그인할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "로그인 완료")
     /*로그인 기능 호출*/
-    public ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(requestDto, response));
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("로그인 완료", userService.loginUser(requestDto, response)));
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<List<UserResponseDto>> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserByUsername(username));
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("유저 정보입니다.", userService.getUserByUsername(username)));
     }
 }
