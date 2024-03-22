@@ -36,7 +36,7 @@ public class FollowServiceTest {
         User toUser = mock(User.class);
 
         // Mocking the behavior of followRepository
-        when(followRepository.findFollow(fromUser, toUser)).thenReturn(Optional.empty());
+        when(followRepository.findFollow(fromUser, toUser.getId())).thenReturn(Optional.empty());
 
         // Call the method under test
         String result = followService.follow(fromUser, toUser);
@@ -64,7 +64,7 @@ public class FollowServiceTest {
         Follow follow = mock(Follow.class); // Mocking the Follow object
 
         // Mocking the behavior of followRepository
-        when(followRepository.findFollow(fromUser, toUser)).thenReturn(Optional.of(follow));
+        when(followRepository.findFollow(fromUser, toUser.getId())).thenReturn(Optional.of(follow));
 
         // Call the method under test and assert that it throws CustomApiException
         assertThrows(CustomApiException.class, () -> followService.follow(fromUser, toUser));

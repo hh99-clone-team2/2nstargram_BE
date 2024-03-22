@@ -18,23 +18,16 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Long followingUserId;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "follower_id")
     private User follower;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "following_id")
-    private User following;
-
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Builder
-    public Follow(User follower, User following){
+    public Follow(Long following, User follower){
+        this.followingUserId = following;
         this.follower = follower;
-        this.following = following;
-
     }
 }
