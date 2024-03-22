@@ -151,6 +151,7 @@ public class PostService {
                 .contents(post.getContents())
                 .postImageList(postImageList.stream().map(PostResponseDto.PostImageResponseDto::new).toList())
                 .likes(0)
+                .like(false)
                 .commentList(new ArrayList<>())
                 .createdAt(post.getCreatedAt())
                 .build();
