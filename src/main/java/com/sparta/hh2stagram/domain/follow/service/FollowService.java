@@ -4,10 +4,8 @@ import com.sparta.hh2stagram.domain.follow.dto.FollowResponseDto;
 import com.sparta.hh2stagram.domain.follow.entity.Follow;
 import com.sparta.hh2stagram.domain.follow.repository.FollowRepository;
 import com.sparta.hh2stagram.domain.user.entity.User;
-import com.sparta.hh2stagram.domain.user.repository.UserRepository;
 import com.sparta.hh2stagram.domain.user.service.UserService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +32,11 @@ public class FollowService {
         if (fromUser == toUser)
             throw new CustomApiException("자기 자신은 follow 할 수 없습니다.");
         // 중복 follow x
-        if (followRepository.findFollow(fromUser, toUser).isPresent())
+        if (followRepository.findFollow(fromUser, toUser.getId()).isPresent())
             throw new CustomApiException("이미 follow 되어있습니다.");
         Follow follow = Follow.builder()
                 .follower(fromUser)
-                .following(toUser)
+                .following(toUser.getId())
                 .build();
         followRepository.save(follow);
         return "Success";
@@ -51,7 +49,7 @@ public class FollowService {
             throw new CustomApiException("자기 자신은 unfollow 할 수 없습니다.");
         }
         // 언팔로우 시도한 팔로우 관계 찾기
-        Optional<Follow> existingFollow = followRepository.findFollow(fromUser, toUser);
+        Optional<Follow> existingFollow = followRepository.findFollow(fromUser, toUser.getId());
         if (existingFollow.isEmpty()) {
             throw new CustomApiException("이미 unfollow 되어있습니다.");
         }
@@ -59,17 +57,17 @@ public class FollowService {
         return "언팔로우 되었습니다.";
     }
 
-    public List<FollowResponseDto> getFollowingList(Long userId) {
-        User follower = userService.findById(userId);
-        List<Follow> follows = followRepository.findByFollower(follower);
+    public List<FollowResponseDto> getFollowingList(String username) {
+        User following = userService.findByUsername(username);
+        List<Follow> follows = followRepository.findByFollowingUserId(following.getId());
         return follows.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    public List<FollowResponseDto> getFollowerList(Long userId){
-        User following = userService.findById(userId);
-        List<Follow> follows = followRepository.findByFollowing(following);
+    public List<FollowResponseDto> getFollowerList(String username){
+        User follower = userService.findByUsername(username);
+        List<Follow> follows = followRepository.findByFollower(follower);
         return follows.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -80,8 +78,8 @@ public class FollowService {
                 follow.getId(),
                 follow.getFollower().getId(),
                 follow.getFollower().getUsername(),
-                follow.getFollowing().getId(),
-                follow.getFollowing().getUsername()
+                follow.getFollowingUserId(),
+                userService.findById(follow.getFollowingUserId()).getUsername()
         );
 
         }
