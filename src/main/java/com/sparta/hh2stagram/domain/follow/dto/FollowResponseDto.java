@@ -4,17 +4,26 @@ import lombok.Getter;
 
 @Getter
 public class FollowResponseDto {
-    private final Long id;
-    private final Long followerId;
-    private final String followerUsername;
-    private final Long followingId;
-    private final String followingUsername;
 
-    public FollowResponseDto(Long id, Long followerId, String followerUsername, Long followingId, String followingUsername) {
-        this.id = id;
-        this.followerId = followerId;
-        this.followerUsername = followerUsername;
-        this.followingId = followingId;
-        this.followingUsername = followingUsername;
+    @Getter
+    public static class FollowerResponseDto {
+        private final Long followerId;
+        private final String followerUsername;
+
+        public FollowerResponseDto(Long followerId, String followerUsername) {
+            this.followerId = followerId;
+            this.followerUsername = followerUsername;
+        }
+    }
+
+    @Getter
+    public static class FollowingResponseDto {
+        private final Long followingId;
+        private final String followingUsername;
+
+        public FollowingResponseDto(Long followingId, String followingUsername) {
+            this.followingId = followingId;
+            this.followingUsername = followingUsername;
+        }
     }
 }
