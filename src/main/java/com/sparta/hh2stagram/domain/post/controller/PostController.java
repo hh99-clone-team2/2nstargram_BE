@@ -3,8 +3,6 @@ package com.sparta.hh2stagram.domain.post.controller;
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.CreatePostRequestDto;
 import com.sparta.hh2stagram.domain.post.dto.PostRequestDto.UpdatePostRequestDto;
 import com.sparta.hh2stagram.domain.post.dto.PostResponseDto;
-import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.CreatePostResponseDto;
-import com.sparta.hh2stagram.domain.post.dto.PostResponseDto.UpdatePostResponseDto;
 import com.sparta.hh2stagram.domain.post.service.PostService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import com.sparta.hh2stagram.global.refreshToken.dto.ResponseDto;
@@ -27,16 +25,16 @@ import java.util.List;
 @Slf4j(topic = "PostController 로그")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/p")
 public class PostController {
 
     private final PostService postService;
 
     // 게시글 등록
     @Operation(summary = "새 게시물 만들기",
-                description = "새 게시물 만들기 : contents, file")
-    @PostMapping(value = "/posts", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> createPost(@RequestPart(value = "files") List<MultipartFile> multipartFileList,
+            description = "새 게시물 만들기 : contents, file")
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> createPost(@RequestPart(value = "files", required = false) List<MultipartFile> multipartFileList,
                                         @RequestPart(value = "createPostRequestDto") CreatePostRequestDto requestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
@@ -45,30 +43,30 @@ public class PostController {
             throw new CustomApiException("이미지가 존재하지 않습니다.");
         }
 
-        CreatePostResponseDto responseDto = postService.createPost(requestDto, multipartFileList, userDetails.getUser());
+        PostResponseDto.PostsResponseDto responseDto = postService.createPost(requestDto, multipartFileList, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.success("게시물이 공유되었습니다.", responseDto));
     }
 
     // 게시글 수정
     @Operation(summary = "수정",
-                description = "정보 수정 : contents")
-    @PatchMapping(value = "/posts/{postId}")
+            description = "정보 수정 : contents")
+    @PatchMapping(value = "/{postId}")
     public ResponseEntity<?> updatePost(@RequestBody UpdatePostRequestDto requestDto,
                                         @PathVariable Long postId,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-        UpdatePostResponseDto requestDto1 = postService.updatePost(postId, requestDto, userDetails.getUser());
+        PostResponseDto.PostsResponseDto responseDto = postService.updatePost(postId, requestDto, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ResponseDto.success("게시물이 수정되었습니다.", requestDto1));
+        return ResponseEntity.ok().body(ResponseDto.success("게시물이 수정되었습니다.", responseDto));
     }
 
     // 게시글 삭제
     @Operation(summary = "삭제",
-                description = "유저 정보가 일치할 경우, 게시글 삭제 가능")
-    @DeleteMapping(value = "/posts/{postId}")
-    public ResponseEntity<?> deletePost (@PathVariable Long postId,
-                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException{
+            description = "유저 정보가 일치할 경우, 게시글 삭제 가능")
+    @DeleteMapping(value = "/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
         postService.deletePost(postId, userDetails.getUser());
 
@@ -78,10 +76,29 @@ public class PostController {
 
     // 게시글 전체 조회
     @Operation(summary = "게시글 전체 조회",
-                description = "postId를 통한 게시글 상세 조회")
-    @GetMapping(value = "/posts")
-    public ResponseEntity<?> getPost () throws IOException {
-        List<PostResponseDto.AllPostResponseDto> responseDtoList = postService.getPost();
-        return  ResponseEntity.ok().body(ResponseDto.success("게시글 전체 조회", responseDtoList));
+            description = "postId를 통한 게시글 상세 조회")
+    @GetMapping(value = "/explore")
+    public ResponseEntity<?> getPost(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPost(userDetails.getUser());
+        return ResponseEntity.ok().body(ResponseDto.success("게시글 전체 조회", responseDtoList));
+    }
+
+    // 유저별 게시글 조회(마이페이지, 유저페이지)
+    @Operation(summary = "유저별 게시글 조회")
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getPostByUsername(@PathVariable String username,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        PostResponseDto.UserPageResponseDto responseDtoList = postService.getPostByUsername(username, userDetails.getUser());
+        return ResponseEntity.ok().body(ResponseDto.success("해당 유저 게시글 조회", responseDtoList));
+    }
+
+    // 팔로우한 사용자의 게시글 조회(메인페이지)
+    @Operation(summary = "팔로우한 유저의 게시글 조회",
+            description = "팔로우한 유저의 게시글을 조회합니다.")
+    @GetMapping
+    public ResponseEntity<?> getFollowPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPostsOfFollowedUser(userDetails);
+
+        return ResponseEntity.ok().body(ResponseDto.success("팔로우한 유저의 게시글 조회", responseDtoList));
     }
 }
