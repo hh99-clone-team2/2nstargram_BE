@@ -4,9 +4,6 @@ import com.sparta.hh2stagram.domain.follow.entity.Follow;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +48,8 @@ public class User {
     @Column
     private UserRoleEnum role = UserRoleEnum.USER;
 
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> followList;
 
     @Builder
     public User(String email, String phoneNumber, String password,String name,String username) {

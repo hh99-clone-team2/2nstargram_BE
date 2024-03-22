@@ -1,7 +1,6 @@
 package com.sparta.hh2stagram.domain.likes.controller;
 
 import com.sparta.hh2stagram.domain.likes.service.LikesService;
-import com.sparta.hh2stagram.global.refreshToken.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Like Controller", description = "좋아요 기능 컨트롤러")
 @Slf4j(topic = "좋아요")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/likes")
 public class LikesController {
 
     /* LikeService : 좋아요 기능 서비스
@@ -30,12 +29,12 @@ public class LikesController {
 
     @Operation(summary = "게시글 좋아요", description = "게시글 좋아요를 추가/취소")
     @ApiResponse(responseCode = "200", description = "게시글 좋아요 추가/취소 성공")
-    @PostMapping("/posts/{postId}/likes")
-    public ResponseEntity<?> likeChoice(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<String> likeChoice(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
         String message =likesService.likeOrUnlikePost(postId,userDetails);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("게시글 좋아요 추가/취소 성공", message));
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
 }

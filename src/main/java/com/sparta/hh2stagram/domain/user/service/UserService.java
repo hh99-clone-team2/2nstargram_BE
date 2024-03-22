@@ -120,7 +120,7 @@ public class UserService {
         }
 
         // JWT 토큰 생성
-        String token = jwtUtil.createAccessToken(loginId, user.getRole());
+        String token = jwtUtil.createAccessToken(user.getUsername(), user.getRole());
 
         // HTTP 응답 헤더에 JWT 토큰 추가
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
