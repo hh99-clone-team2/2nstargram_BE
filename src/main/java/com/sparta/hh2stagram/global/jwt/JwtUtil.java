@@ -43,7 +43,8 @@ public class JwtUtil {
         Date date = new Date();
 
         /*토큰 만료시간*/
-        long TOKEN_TIME = 60 * 60 * 1000L; /*60분*/
+//        long TOKEN_TIME = 60 * 60 * 1000L; /*60분*/
+        long TOKEN_TIME = 60 * 60 * 1000000L;
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username) /*사용자 식별자값(ID)*/

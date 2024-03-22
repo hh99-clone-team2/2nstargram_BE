@@ -4,6 +4,7 @@ import com.sparta.hh2stagram.domain.comment.dto.CommentRequestDto;
 import com.sparta.hh2stagram.domain.comment.dto.CommentResponseDto;
 import com.sparta.hh2stagram.domain.comment.service.CommentService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
+import com.sparta.hh2stagram.global.refreshToken.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -28,47 +29,49 @@ public class CommentController {
     @PostMapping("/{postId}/comment")
     @Operation(summary = "댓글 작성", description = "작성자와 댓글 내용을 등록할 수 있습니다.")
     @ApiResponse(responseCode = "201", description = "댓글 작성 완료")
-    public ResponseEntity<CommentResponseDto> addComment(
+    public ResponseEntity<?> addComment(
             @PathVariable("postId") Long postId,
             @RequestBody CommentRequestDto commentRequestDto,
             @AuthenticationPrincipal UserDetails userDetails) {
         CommentResponseDto responseDto = commentService.addComment(postId, commentRequestDto, userDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.success("댓글이 작성되었습니다.",responseDto));
+
+//        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.success("게시물이 공유되었습니다.", responseDto));
     }
 
     @GetMapping("/{postId}/comment")
     @Operation(summary = "댓글 조회", description = "댓글 조회를 할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "댓글 조회 완료")
-    public ResponseEntity<List<CommentResponseDto>> getComment(
+    public ResponseEntity<?> getComment(
             @PathVariable("postId") Long postId,
             @AuthenticationPrincipal UserDetails userDetails) {
         List<CommentResponseDto> responseDtoList = commentService.getComment(postId, userDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("댓글 조회 완료",responseDtoList));
     }
 
     @PatchMapping("/{postId}/comment/{commentId}")
     @Operation(summary = "댓글 수정", description = "작성한 댓글을 수정할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "댓글 수정 완료")
-    public ResponseEntity<CommentResponseDto> updateComment(
+    public ResponseEntity<?> updateComment(
             @PathVariable("postId") Long postId,
             @PathVariable("commentId") Long commentId,
             @RequestBody CommentRequestDto commentRequestDto,
             @AuthenticationPrincipal UserDetails userDetails) {
         CommentResponseDto responseDto = commentService.updateComment(postId, commentId, commentRequestDto, userDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("댓글 수정 완료",responseDto));
     }
 
     @DeleteMapping("/{postId}/comment/{commentId}")
     @Operation(summary = "댓글 삭제", description = "작성한 댓글을 삭제할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 삭제되었습니다.")
-    public ResponseEntity<String> deleteComment(
+    public ResponseEntity<?> deleteComment(
             @PathVariable("postId") Long postId,
             @PathVariable("commentId") Long commentId,
             @AuthenticationPrincipal UserDetails userDetails) {
 
         try {
             commentService.deleteComment(postId, commentId, userDetails);
-            return ResponseEntity.ok("댓글이 삭제되었습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("댓글이 삭제되었습니다.", null));
         } catch (CustomApiException ex) {
             throw ex;
         } catch (Exception ex) {
