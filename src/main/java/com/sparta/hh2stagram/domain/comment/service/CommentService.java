@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,7 @@ public class CommentService {
                 .commentId(comment.getId())
                 .username(user.getUsername())
                 .content(comment.getContent())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
@@ -62,6 +64,7 @@ public class CommentService {
                         .commentId(comment.getId())
                         .username(comment.getUser().getUsername())
                         .content(comment.getContent())
+                        .createdAt(LocalDateTime.now())
                         .build())
                 .collect(Collectors.toList());
 
