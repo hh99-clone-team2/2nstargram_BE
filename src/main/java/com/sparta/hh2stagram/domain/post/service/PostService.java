@@ -1,5 +1,6 @@
 package com.sparta.hh2stagram.domain.post.service;
 
+import com.sparta.hh2stagram.domain.comment.dto.CommentResponseDto;
 import com.sparta.hh2stagram.domain.follow.entity.Follow;
 import com.sparta.hh2stagram.domain.follow.repository.FollowRepository;
 import com.sparta.hh2stagram.domain.likes.repository.LikesRepository;
@@ -139,7 +140,7 @@ public class PostService {
                 .contents(post.getContents())
                 .postImageList(post.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
                 .likes(post.getLikesList().size())
-                .commentList(post.getCommentList())
+                .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
                 .createdAt(post.getCreatedAt())
                 .build();
     }
@@ -167,7 +168,7 @@ public class PostService {
                     .postImageList(post.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
                     .likes(post.getLikesList().size())
                     .like(likesRepository.findByUserAndPost(user, post).isPresent())
-                    .commentList(post.getCommentList())
+                    .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
                     .createdAt(post.getCreatedAt())
                     .build());
         }
