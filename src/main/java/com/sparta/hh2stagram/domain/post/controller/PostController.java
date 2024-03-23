@@ -88,8 +88,9 @@ public class PostController {
     @Operation(summary = "유저별 게시물 조회")
     @GetMapping("/{username}")
     public ResponseEntity<?> getPostByUsername(@PathVariable String username,
-                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto.UserPageResponseDto responseDtoList = postService.getPostByUsername(username, userDetails.getUser());
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @RequestParam(value = "cursor") Long cursor) {
+        PostResponseDto.UserPageResponseDto responseDtoList = postService.getPostByUsername(username, userDetails.getUser(), cursor);
         return ResponseEntity.ok().body(ResponseDto.success("해당 유저 게시물 조회", responseDtoList));
     }
 

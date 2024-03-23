@@ -95,45 +95,38 @@ public class PostService {
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-        Slice<Post> postSlice = postRepository.findAllUserIdOrderByLikesCountDescAndUserUsernameAsc(user.getId(), pageRequest);
-
-//        if (cursor == 0) {
-//            postList = postRepository.findAllByUser_UsernameNextPage(user.getUsername(), pageRequest);
-//        } else {
-//            postList = postRepository.findAllByUser_UsernameOrderByLikesCountDesc(user.getUsername(), pageRequest);
-//        }
+        Slice<Post> postSlice = postRepository.findAllUserIdOrderByLikesCountDescAndUser_UsernameAsc(user.getId(), pageRequest);
 
         return postSlice.stream()
                 .map(onePost -> PostResponseDto.PostsResponseDto.builder()
                         .postId(onePost.getId())
                         .username(onePost.getUser().getUsername())
                         .contents(onePost.getContents())
-//                        .postImageList(onePost.getPostImageList())
+                        .postImageList(onePost.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
                         .commentList(onePost.getCommentList().stream().map(CommentResponseDto::new).toList())
                         .createdAt(onePost.getCreatedAt())
                         .likesCount(onePost.getLikesCount())
+                        .like(likesRepository.findByUserAndPost(user, onePost).isPresent()) // 이 부분 추가
                         .build())
                 .collect(Collectors.toList());
-
-//        // 모든 게시글을 조회합니다
-//        List<Post> allPosts = postRepository.findAll();
-//
-//        // 만약 게시글이 존재하지 않는다면 CustomApiException을 던집니다.
-//        if (allPosts.isEmpty()) {
-//            throw new CustomApiException("해당 게시물이 존재하지 않습니다.");
-//        }
-//
-//        return getPostsResponseDtoList(allPosts, user);
     }
 
     // 유저페이지
     @Transactional(readOnly = true)
-    public PostResponseDto.UserPageResponseDto getPostByUsername(String username, User user) {
+    public PostResponseDto.UserPageResponseDto getPostByUsername(String username, User user, Long cursor) {
+
         User owner = userRepository.findByUsername(username).orElseThrow(
                 () -> new NullPointerException("존재하지 않는 사용자입니다.")
         );
-        List<Post> posts = postRepository.findByUser(owner);
 
+        int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
+        int pageSize = 2; // 한 페이지에 표시할 항목 수
+
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        Slice<Post> postSlice = postRepository.findByUserUserNameByCreatedAtDesc(username, pageRequest);
+
+        List<Post> posts = postSlice.getContent();
 
         // 전체 게시글 목록을 UserPageResponseDto로 변환하여 반환합니다.
         return PostResponseDto.UserPageResponseDto.builder()
@@ -204,6 +197,7 @@ public class PostService {
                     .like(likesRepository.findByUserAndPost(user, post).isPresent())
                     .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
                     .createdAt(post.getCreatedAt())
+                    .likesCount(post.getLikesCount())
                     .build());
         }
 

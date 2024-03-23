@@ -7,6 +7,7 @@ import com.sparta.hh2stagram.domain.post.repository.PostRepository;
 import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.repository.UserRepository;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Slf4j(topic = "좋아요 서비스")
 @Service
+@Getter
 public class LikesService {
 
     /*
@@ -49,6 +51,8 @@ public class LikesService {
         if (existingLike.isPresent()) {
             /*좋아요가 이미 있으면 삭제*/
             likesRepository.delete(existingLike.get());
+            post.setLikesCount(post.getLikesCount() - 1);
+//            postRepository.save(post);
             return "좋아요가 취소되었습니다.";
         } else {
             /*좋아요가 없으면 추가*/
@@ -57,6 +61,11 @@ public class LikesService {
                     .post(post)
                     .build();
             likesRepository.save(newLike);
+            if (post.getLikesCount() == null) {
+                post.setLikesCount(0L);
+            }
+            post.setLikesCount(post.getLikesCount() + 1);
+//            postRepository.save(post);
             return "좋아요가 추가되었습니다.";
         }
     }
