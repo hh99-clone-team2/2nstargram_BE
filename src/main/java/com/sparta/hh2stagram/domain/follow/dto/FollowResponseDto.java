@@ -17,7 +17,6 @@ public class FollowResponseDto {
             this.followerUsername = followerUsername;
         }
     }
-    //
 
     @Getter
     public static class FollowingResponseDto {
