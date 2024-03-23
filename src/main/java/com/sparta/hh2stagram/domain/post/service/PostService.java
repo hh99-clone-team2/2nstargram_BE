@@ -17,6 +17,8 @@ import com.sparta.hh2stagram.global.aws.service.S3UploadService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,22 +117,31 @@ public class PostService {
 
     // 팔로우한 사용자의 게시물 가져오기
     @Transactional(readOnly = true)
-    public List<PostResponseDto.PostsResponseDto> getPostsOfFollowedUser(UserDetails userDetails) {
+    public List<PostResponseDto.PostsResponseDto> getPostsOfFollowedUser(UserDetails userDetails, Long cursor) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new NullPointerException("존재하지 않는 사용자입니다.")
         );
 
-        List<Post> posts = new ArrayList<>();
+        int pageSize = 10; // 한 페이지에 표시할 항목 수
+        int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
+
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
         List<Follow> followList = user.getFollowList();
-        for (Follow follow : followList) {
-            posts.addAll(postRepository.findByUserId(follow.getFollowingUserId()));
-        }
+        Slice<Post> posts = postRepository.findByUserIdInOrderByCreatedAtDesc(followList.stream().map(Follow::getFollowingUserId).toList(), pageRequest);
 
-        if (posts.isEmpty()) {
-            throw new CustomApiException("게시물을 찾을 수 없습니다.");
-        }
-
-        return getPostsResponseDtoList(posts, user);
+        return posts.stream().map(post -> PostResponseDto.PostsResponseDto.builder()
+                .postId(post.getId())
+                .username(post.getUser().getUsername())
+                .contents(post.getContents())
+                .postImageList(post.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
+                .likes(post.getLikesList().size())
+                .like(likesRepository.findByUserAndPost(user, post).isPresent())
+                .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
+                .createdAt(post.getCreatedAt())
+                .build()
+                )
+                .toList();
     }
 
     private PostResponseDto.PostsResponseDto getPostsResponseDto(Post post) {
