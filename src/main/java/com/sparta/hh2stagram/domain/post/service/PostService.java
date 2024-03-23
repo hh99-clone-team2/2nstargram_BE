@@ -17,15 +17,23 @@ import com.sparta.hh2stagram.global.aws.service.S3UploadService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -80,26 +88,45 @@ public class PostService {
 
     // 게시글 전체 조회
     @Transactional(readOnly = true)
-    public List<PostResponseDto.PostsResponseDto> getPost(User user) {
-        // 모든 게시글을 조회합니다.
-        List<Post> allPosts = postRepository.findAll();
+    public List<PostResponseDto.PostsResponseDto> getPost(User user, Long cursor) {
 
-        // 만약 게시글이 존재하지 않는다면 CustomApiException을 던집니다.
-        if (allPosts.isEmpty()) {
-            throw new CustomApiException("해당 게시물이 존재하지 않습니다.");
-        }
+        int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
+        int pageSize = 10; // 한 페이지에 표시할 항목 수
 
-        return getPostsResponseDtoList(allPosts, user);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        Slice<Post> postSlice = postRepository.findAllUserIdOrderByLikesCountDescAndUser_UsernameAsc(user.getId(), pageRequest);
+
+        return postSlice.stream()
+                .map(onePost -> PostResponseDto.PostsResponseDto.builder()
+                        .postId(onePost.getId())
+                        .username(onePost.getUser().getUsername())
+                        .contents(onePost.getContents())
+                        .postImageList(onePost.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
+                        .commentList(onePost.getCommentList().stream().map(CommentResponseDto::new).toList())
+                        .createdAt(onePost.getCreatedAt())
+                        .likesCount(onePost.getLikesCount())
+                        .like(likesRepository.findByUserAndPost(user, onePost).isPresent()) // 이 부분 추가
+                        .build())
+                .collect(Collectors.toList());
     }
 
     // 유저페이지
     @Transactional(readOnly = true)
-    public PostResponseDto.UserPageResponseDto getPostByUsername(String username, User user) {
+    public PostResponseDto.UserPageResponseDto getPostByUsername(String username, User user, Long cursor) {
+
         User owner = userRepository.findByUsername(username).orElseThrow(
                 () -> new NullPointerException("존재하지 않는 사용자입니다.")
         );
-        List<Post> posts = postRepository.findByUser(owner);
 
+        int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
+        int pageSize = 2; // 한 페이지에 표시할 항목 수
+
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        Slice<Post> postSlice = postRepository.findByUserUserNameByCreatedAtDesc(username, pageRequest);
+
+        List<Post> posts = postSlice.getContent();
 
         // 전체 게시글 목록을 UserPageResponseDto로 변환하여 반환합니다.
         return PostResponseDto.UserPageResponseDto.builder()
@@ -170,6 +197,7 @@ public class PostService {
                     .like(likesRepository.findByUserAndPost(user, post).isPresent())
                     .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
                     .createdAt(post.getCreatedAt())
+                    .likesCount(post.getLikesCount())
                     .build());
         }
 
