@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api/comments")
 @Slf4j(topic = "댓글 작성, 조회, 수정, 삭제")
 public class CommentController {
     private final CommentService commentService;
@@ -26,7 +26,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/{postId}/comment")
+    @PostMapping("/{postId}/add")
     @Operation(summary = "댓글 작성", description = "작성자와 댓글 내용을 등록할 수 있습니다.")
     @ApiResponse(responseCode = "201", description = "댓글 작성 완료")
     public ResponseEntity<?> addComment(
@@ -39,7 +39,7 @@ public class CommentController {
 //        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.success("게시물이 공유되었습니다.", responseDto));
     }
 
-    @GetMapping("/{postId}/comment")
+    @GetMapping("/{postId}")
     @Operation(summary = "댓글 조회", description = "댓글 조회를 할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "댓글 조회 완료")
     public ResponseEntity<?> getComment(
@@ -49,7 +49,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("댓글 조회 완료",responseDtoList));
     }
 
-    @PatchMapping("/{postId}/comment/{commentId}")
+    @PatchMapping("/{postId}/update/{commentId}")
     @Operation(summary = "댓글 수정", description = "작성한 댓글을 수정할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "댓글 수정 완료")
     public ResponseEntity<?> updateComment(
@@ -61,7 +61,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("댓글 수정 완료",responseDto));
     }
 
-    @DeleteMapping("/{postId}/comment/{commentId}")
+    @DeleteMapping("/{postId}/delete/{commentId}")
     @Operation(summary = "댓글 삭제", description = "작성한 댓글을 삭제할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 삭제되었습니다.")
     public ResponseEntity<?> deleteComment(

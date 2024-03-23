@@ -57,30 +57,35 @@ public class FollowService {
         return "언팔로우 되었습니다.";
     }
 
-    public List<FollowResponseDto> getFollowingList(String username) {
-        User following = userService.findByUsername(username);
-        List<Follow> follows = followRepository.findByFollowingUserId(following.getId());
-        return follows.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<FollowResponseDto.FollowingResponseDto> getFollowingList(String username) {
+        User user = userService.findByUsername(username);
+        List<Follow> following = followRepository.findByFollower(user);
+        return following.stream()
+                .map(this::convertToFollowingDto)
+                .toList();
     }
 
-    public List<FollowResponseDto> getFollowerList(String username){
-        User follower = userService.findByUsername(username);
-        List<Follow> follows = followRepository.findByFollower(follower);
-        return follows.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public List<FollowResponseDto.FollowerResponseDto> getFollowerList(String username) {
+        User user = userService.findByUsername(username);
+        List<Follow> followers = followRepository.findByFollowingUserId(user.getId());
+        return followers.stream()
+                .map(this::convertToFollowerDto)
+                .toList();
     }
 
-    private FollowResponseDto convertToDto(Follow follow) {
-        return new FollowResponseDto(
-                follow.getId(),
-                follow.getFollower().getId(),
-                follow.getFollower().getUsername(),
-                follow.getFollowingUserId(),
-                userService.findById(follow.getFollowingUserId()).getUsername()
+    private FollowResponseDto.FollowingResponseDto convertToFollowingDto(Follow following) {
+        return new FollowResponseDto.FollowingResponseDto(
+                following.getId(),
+                following.getFollowingUserId(),
+                userService.findById(following.getFollowingUserId()).getUsername()
         );
+    }
 
-        }
+    private FollowResponseDto.FollowerResponseDto convertToFollowerDto(Follow follower) {
+        return new FollowResponseDto.FollowerResponseDto(
+                follower.getId(),
+                follower.getFollower().getId(),
+                follower.getFollower().getUsername()
+        );
+    }
 }
