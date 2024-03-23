@@ -25,14 +25,13 @@ public class Follow {
     @JoinColumn(name = "follower_id")
     private User follower;
 
+    public Object getFollowerId() {
+        return follower.getId();
+    }
+
     @Builder
     public Follow(Long following, User follower){
         this.followingUserId = following;
         this.follower = follower;
-    }
-
-    // follower, following 페이저블 하면서 만들었어요. 커밋이 안되서 우선 올립니다 ㅠㅠ!
-    public Object getFollowerId() {
-        return follower.getId();
     }
 }
