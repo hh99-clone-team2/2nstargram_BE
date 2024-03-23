@@ -17,15 +17,23 @@ import com.sparta.hh2stagram.global.aws.service.S3UploadService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -80,16 +88,42 @@ public class PostService {
 
     // 게시글 전체 조회
     @Transactional(readOnly = true)
-    public List<PostResponseDto.PostsResponseDto> getPost(User user) {
-        // 모든 게시글을 조회합니다.
-        List<Post> allPosts = postRepository.findAll();
+    public List<PostResponseDto.PostsResponseDto> getPost(User user, Long cursor) {
 
-        // 만약 게시글이 존재하지 않는다면 CustomApiException을 던집니다.
-        if (allPosts.isEmpty()) {
-            throw new CustomApiException("해당 게시물이 존재하지 않습니다.");
-        }
+        int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
+        int pageSize = 10; // 한 페이지에 표시할 항목 수
 
-        return getPostsResponseDtoList(allPosts, user);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        Slice<Post> postSlice = postRepository.findAllUserIdOrderByLikesCountDescAndUserUsernameAsc(user.getId(), pageRequest);
+
+//        if (cursor == 0) {
+//            postList = postRepository.findAllByUser_UsernameNextPage(user.getUsername(), pageRequest);
+//        } else {
+//            postList = postRepository.findAllByUser_UsernameOrderByLikesCountDesc(user.getUsername(), pageRequest);
+//        }
+
+        return postSlice.stream()
+                .map(onePost -> PostResponseDto.PostsResponseDto.builder()
+                        .postId(onePost.getId())
+                        .username(onePost.getUser().getUsername())
+                        .contents(onePost.getContents())
+//                        .postImageList(onePost.getPostImageList())
+                        .commentList(onePost.getCommentList().stream().map(CommentResponseDto::new).toList())
+                        .createdAt(onePost.getCreatedAt())
+                        .likesCount(onePost.getLikesCount())
+                        .build())
+                .collect(Collectors.toList());
+
+//        // 모든 게시글을 조회합니다
+//        List<Post> allPosts = postRepository.findAll();
+//
+//        // 만약 게시글이 존재하지 않는다면 CustomApiException을 던집니다.
+//        if (allPosts.isEmpty()) {
+//            throw new CustomApiException("해당 게시물이 존재하지 않습니다.");
+//        }
+//
+//        return getPostsResponseDtoList(allPosts, user);
     }
 
     // 유저페이지

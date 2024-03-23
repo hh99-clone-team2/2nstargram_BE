@@ -78,9 +78,10 @@ public class PostController {
     @Operation(summary = "게시물 전체 조회",
             description = "postId를 통한 게시물 상세 조회")
     @GetMapping(value = "/explore")
-    public ResponseEntity<?> getPost(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPost(userDetails.getUser());
-        return ResponseEntity.ok().body(ResponseDto.success("게시물 전체 조회", responseDtoList));
+    public ResponseEntity<?> getPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                     @RequestParam(value = "cursor") Long cursor) throws IOException {
+        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPost(userDetails.getUser(), cursor);
+        return ResponseEntity.ok().body(ResponseDto.success("게시글 전체 조회", responseDtoList));
     }
 
     // 유저별 게시글 조회(마이페이지, 유저페이지)
