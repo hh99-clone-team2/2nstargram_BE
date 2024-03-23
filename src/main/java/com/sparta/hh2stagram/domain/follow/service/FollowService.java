@@ -7,6 +7,8 @@ import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.service.UserService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final UserService userService;
+    private static final int PAGE_SIZE = 5;
 
     public FollowService(FollowRepository followRepository, UserService userService) {
         this.followRepository = followRepository;
@@ -57,17 +60,18 @@ public class FollowService {
         return "언팔로우 되었습니다.";
     }
 
-    public List<FollowResponseDto.FollowingResponseDto> getFollowingList(String username) {
-        User user = userService.findByUsername(username);
-        List<Follow> following = followRepository.findByFollower(user);
+    public List<FollowResponseDto.FollowingResponseDto> getFollowingList(String username, Long cursorId) {
+        // 슬라이스 검색 (커서)
+        Slice<Follow> following = followRepository.findByFollowingUsernameWithCursor(username, cursorId, PageRequest.of(0, PAGE_SIZE));
+        // 슬라이스 dto 변환 후 반환 해주기
         return following.stream()
                 .map(this::convertToFollowingDto)
                 .toList();
     }
 
-    public List<FollowResponseDto.FollowerResponseDto> getFollowerList(String username) {
+    public List<FollowResponseDto.FollowerResponseDto> getFollowerList(String username, Long cursorId) {
         User user = userService.findByUsername(username);
-        List<Follow> followers = followRepository.findByFollowingUserId(user.getId());
+        Slice<Follow> followers = followRepository.findByFollowerIdWithCursor(user.getId(), cursorId, PageRequest.of(0, PAGE_SIZE));
         return followers.stream()
                 .map(this::convertToFollowerDto)
                 .toList();
