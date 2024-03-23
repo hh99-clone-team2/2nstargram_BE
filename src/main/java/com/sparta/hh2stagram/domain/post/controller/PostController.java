@@ -98,8 +98,9 @@ public class PostController {
     @Operation(summary = "팔로우한 유저의 게시물 조회",
             description = "팔로우한 유저의 게시물을 조회합니다.")
     @GetMapping
-    public ResponseEntity<?> getFollowPost(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPostsOfFollowedUser(userDetails);
+    public ResponseEntity<?> getFollowPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                           @RequestParam(value = "cursor") Long cursor) throws IOException {
+        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPostsOfFollowedUser(userDetails, cursor);
 
         return ResponseEntity.ok().body(ResponseDto.success("팔로우한 유저의 게시물 조회", responseDtoList));
     }
