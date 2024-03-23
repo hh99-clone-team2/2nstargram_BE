@@ -23,6 +23,10 @@ public class Post extends Timestamped {
     @Column (length = 2200, nullable = true)
     private String contents;
 
+    @Setter
+    @Column (columnDefinition = "bigint default 0")
+    private Long likesCount;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -36,6 +40,9 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post")
     private List<Likes> likesList;
 
+    public Long getLikesCount() {
+        return this.likesCount;
+    }
     @Builder
     public Post(String contents, User user) {
         this.contents = contents;
@@ -45,4 +52,5 @@ public class Post extends Timestamped {
     public void update(UpdatePostRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }
+
 }

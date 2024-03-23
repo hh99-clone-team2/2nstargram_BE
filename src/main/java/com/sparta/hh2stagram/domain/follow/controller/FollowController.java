@@ -55,17 +55,19 @@ public class FollowController {
     @Operation(summary = "팔로잉 목록 조회", description = "팔로잉 목록 조회")
     @ApiResponse(responseCode = "200", description = "팔로워 목록 조회 성공")
     @GetMapping("/{username}/following")
-    public ResponseEntity<?> getFollowingList(@PathVariable String username) {
-        List<FollowResponseDto.FollowingResponseDto> followingList = followService.getFollowingList(username);
+    public ResponseEntity<?> getFollowingList(@PathVariable String username, @RequestParam(required = false) Long cursorId) {
+        // 커서 제공 x -> 첫번째 페이지 검색하기 위해 Long.MAX_VALUE로 설정
+        cursorId = cursorId != null ? cursorId : Long.MAX_VALUE;
+        List<FollowResponseDto.FollowingResponseDto> followingList = followService.getFollowingList(username, cursorId);
         return ResponseEntity.ok().body(ResponseDto.success("팔로잉 목록 조회", followingList));
     }
 
     @Operation(summary = "팔로워 목록 조회", description = "팔로워 목록 조회")
     @ApiResponse(responseCode = "200", description = "팔로워 목록 조회 성공")
     @GetMapping("/{username}/followers")
-    public ResponseEntity<?> getFollowerList(@PathVariable String username) {
-        User user = userService.findByUsername(username); // 조회할 사용자 정보 가져오기
-        List<FollowResponseDto.FollowerResponseDto> followerList = followService.getFollowerList(username); // 팔로워 목록 조회
+    public ResponseEntity<?> getFollowerList(@PathVariable String username, @RequestParam(required = false) Long cursorId) {
+        cursorId = cursorId != null ? cursorId : Long.MAX_VALUE;
+        List<FollowResponseDto.FollowerResponseDto> followerList = followService.getFollowerList(username, cursorId);
         return ResponseEntity.ok().body(ResponseDto.success("팔로워 목록 조회", followerList));
     }
 }

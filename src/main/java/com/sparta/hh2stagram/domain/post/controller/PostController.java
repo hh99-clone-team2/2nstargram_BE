@@ -78,17 +78,19 @@ public class PostController {
     @Operation(summary = "게시물 전체 조회",
             description = "postId를 통한 게시물 상세 조회")
     @GetMapping(value = "/explore")
-    public ResponseEntity<?> getPost(@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPost(userDetails.getUser());
-        return ResponseEntity.ok().body(ResponseDto.success("게시물 전체 조회", responseDtoList));
+    public ResponseEntity<?> getPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                     @RequestParam(value = "cursor") Long cursor) throws IOException {
+        List<PostResponseDto.PostsResponseDto> responseDtoList = postService.getPost(userDetails.getUser(), cursor);
+        return ResponseEntity.ok().body(ResponseDto.success("게시글 전체 조회", responseDtoList));
     }
 
     // 유저별 게시글 조회(마이페이지, 유저페이지)
     @Operation(summary = "유저별 게시물 조회")
     @GetMapping("/{username}")
     public ResponseEntity<?> getPostByUsername(@PathVariable String username,
-                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto.UserPageResponseDto responseDtoList = postService.getPostByUsername(username, userDetails.getUser());
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @RequestParam(value = "cursor") Long cursor) {
+        PostResponseDto.UserPageResponseDto responseDtoList = postService.getPostByUsername(username, userDetails.getUser(), cursor);
         return ResponseEntity.ok().body(ResponseDto.success("해당 유저 게시물 조회", responseDtoList));
     }
 

@@ -25,6 +25,10 @@ public class Follow {
     @JoinColumn(name = "follower_id")
     private User follower;
 
+    public Object getFollowerId() {
+        return follower.getId();
+    }
+
     @Builder
     public Follow(Long following, User follower){
         this.followingUserId = following;

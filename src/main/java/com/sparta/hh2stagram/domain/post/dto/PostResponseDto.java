@@ -25,9 +25,10 @@ public class PostResponseDto {
         private boolean like;
         private List<CommentResponseDto> commentList;
         private LocalDateTime createdAt;
+        private Long likesCount;
 
         @Builder
-        public PostsResponseDto(Long postId, String username, String contents, List<PostImageResponseDto> postImageList, int likes, boolean like, List<CommentResponseDto> commentList, LocalDateTime createdAt) {
+        public PostsResponseDto(Long postId, String username, String contents, List<PostImageResponseDto> postImageList, int likes, boolean like, List<CommentResponseDto> commentList, LocalDateTime createdAt, Long likesCount) {
             this.postId = postId;
             this.username = username;
             this.contents = contents;
@@ -36,6 +37,7 @@ public class PostResponseDto {
             this.like = like;
             this.commentList = commentList;
             this.createdAt = createdAt;
+            this.likesCount = likesCount;
         }
     }
 
