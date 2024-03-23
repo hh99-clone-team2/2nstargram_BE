@@ -52,7 +52,6 @@ public class LikesService {
             /*좋아요가 이미 있으면 삭제*/
             likesRepository.delete(existingLike.get());
             post.setLikesCount(post.getLikesCount() - 1);
-//            postRepository.save(post);
             return "좋아요가 취소되었습니다.";
         } else {
             /*좋아요가 없으면 추가*/
@@ -65,7 +64,6 @@ public class LikesService {
                 post.setLikesCount(0L);
             }
             post.setLikesCount(post.getLikesCount() + 1);
-//            postRepository.save(post);
             return "좋아요가 추가되었습니다.";
         }
     }

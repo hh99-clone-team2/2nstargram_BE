@@ -26,3 +26,4 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     Slice<Follow> findByFollowerIdWithCursor(@Param("userId") Long userId, @Param("cursorId") Long cursorId, Pageable pageable);
 
 }
+
