@@ -23,7 +23,7 @@
 ## API 명세서
 -----
 
-[https://documenter.getpostman.com/view/33070046/2sA2xnyVjE](https://tmi-balance.store/swagger-ui/index.html#)
+[[https://documenter.getpostman.com/view/33070046/2sA2xnyVjE](https://tmi-balance.store/swagger-ui/index.html#)](https://tmi-balance.store/swagger-ui/index.html#)
 
 -----
 ## ERD
