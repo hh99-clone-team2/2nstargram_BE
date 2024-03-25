@@ -55,7 +55,7 @@ etc : 그 외 메모사항이 있는 경우
 ✅ 코드리뷰 자주자주 하기
 
  -----
-TeamBalance's notion
+2stargram's notion
  -----
 
 [https://ancient-tumbleweed-92a.notion.site/2-SA-a86ba63e762146af8516ebfdd5d44846](https://www.notion.so/kihyunkim001/99-2-S-A-f7575c0ce62b4610b7f345145a36a4b6)
@@ -66,19 +66,7 @@ TeamBalance's notion
  
  
 
-  -----
+ -----
  UI
  -----
-
- ![스크린샷 2024-03-18 230428](https://github.com/yuha00e/TeamBalance-BE/assets/157124813/c27e3ebe-05e6-40a4-88b2-32d567deda70)
-
- ![스크린샷 2024-03-18 230027](https://github.com/yuha00e/TeamBalance-BE/assets/157124813/1343bdfa-3f03-4e3e-92b5-5421dd228758)
-
- ![스크린샷 2024-03-18 230236](https://github.com/yuha00e/TeamBalance-BE/assets/157124813/e8aa9f84-52af-4321-9085-d79342344c68)
-
- ![스크린샷 2024-03-18 230300](https://github.com/yuha00e/TeamBalance-BE/assets/157124813/c9aa11e7-b6a9-4916-a625-e3f7253024b9)
-
-
-
-
 
