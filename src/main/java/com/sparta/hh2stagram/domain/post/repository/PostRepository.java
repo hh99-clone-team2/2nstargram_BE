@@ -28,4 +28,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query ("SELECT p FROM Post p WHERE p.user.username <= ?1 ORDER BY p.createdAt DESC")
     Slice<Post> findByUserUserNameByCreatedAtDesc (String username, Pageable pageable);
+
+    Slice<Post> findByUserEqualsOrderByCreatedAtDesc (User user, Pageable pageable);
 }

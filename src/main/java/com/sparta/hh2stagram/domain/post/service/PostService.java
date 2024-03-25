@@ -120,11 +120,11 @@ public class PostService {
         );
 
         int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
-        int pageSize = 2; // 한 페이지에 표시할 항목 수
+        int pageSize = 18; // 한 페이지에 표시할 항목 수
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-        Slice<Post> postSlice = postRepository.findByUserUserNameByCreatedAtDesc(username, pageRequest);
+        Slice<Post> postSlice = postRepository.findByUserEqualsOrderByCreatedAtDesc(owner, pageRequest);
 
         List<Post> posts = postSlice.getContent();
 
