@@ -1,7 +1,6 @@
 package com.sparta.hh2stagram.domain.follow.controller;
 
 import com.sparta.hh2stagram.domain.follow.dto.FollowResponseDto;
-import com.sparta.hh2stagram.domain.follow.entity.Follow;
 import com.sparta.hh2stagram.domain.follow.service.FollowService;
 import com.sparta.hh2stagram.domain.user.entity.User;
 import com.sparta.hh2stagram.domain.user.service.UserService;
@@ -16,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
