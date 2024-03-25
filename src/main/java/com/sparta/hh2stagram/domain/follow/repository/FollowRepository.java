@@ -26,7 +26,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     @Query("SELECT f FROM Follow f WHERE f.followingUserId <= :userId AND f.id > :cursorId AND f.follower.id <> :userId ORDER BY f.id ASC")
     Slice<Follow> findByFollowerIdWithCursor(@Param("userId") Long userId, @Param("cursorId") Long cursorId, Pageable pageable);
 
-
+    boolean existsByFollowerAndFollowingUserId(User Follower, Long FollowingUserId);
 
 }
 

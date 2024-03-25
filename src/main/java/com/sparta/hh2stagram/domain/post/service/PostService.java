@@ -129,6 +129,7 @@ public class PostService {
                 .userInfo(PostResponseDto.UserInfoResponseDto.builder()
                         .follower(followRepository.findByFollowingUserId(owner.getId()).size())
                         .following(followRepository.findByFollower(owner).size())
+                        .follow(followRepository.existsByFollowerAndFollowingUserId(user, owner.getId()))
                         .postNumber(posts.size())
                         .build()
                 )
