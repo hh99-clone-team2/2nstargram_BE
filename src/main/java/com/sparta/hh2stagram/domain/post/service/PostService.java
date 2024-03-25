@@ -17,19 +17,14 @@ import com.sparta.hh2stagram.global.aws.service.S3UploadService;
 import com.sparta.hh2stagram.global.handler.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -71,7 +66,7 @@ public class PostService {
 
         post.update(requestDto);
 
-        return getPostsResponseDto(post);
+        return getPostsResponseDto(post, user);
     }
 
     // 게시물 삭제 //게시물을 삭제할까요? 이 게시물을 삭제하시겠어요?
@@ -105,7 +100,7 @@ public class PostService {
                         .postImageList(onePost.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
                         .commentList(onePost.getCommentList().stream().map(CommentResponseDto::new).toList())
                         .createdAt(onePost.getCreatedAt())
-                        .likesCount(onePost.getLikesCount())
+                        .likes(onePost.getLikesList().size())
                         .like(likesRepository.findByUserAndPost(user, onePost).isPresent()) // 이 부분 추가
                         .build())
                 .collect(Collectors.toList());
@@ -120,7 +115,7 @@ public class PostService {
         );
 
         int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
-        int pageSize = 10; // 한 페이지에 표시할 항목 수
+        int pageSize = 18; // 한 페이지에 표시할 항목 수
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
@@ -169,18 +164,20 @@ public class PostService {
                 .toList();
     }
 
-    private PostResponseDto.PostsResponseDto getPostsResponseDto(Post post) {
+    private PostResponseDto.PostsResponseDto getPostsResponseDto(Post post, User user) {
         return PostResponseDto.PostsResponseDto.builder()
                 .postId(post.getId())
                 .username(post.getUser().getUsername())
                 .contents(post.getContents())
                 .postImageList(post.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
                 .likes(post.getLikesList().size())
+                .like(likesRepository.findByUserAndPost(user, post).isPresent())
                 .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
                 .createdAt(post.getCreatedAt())
                 .build();
     }
 
+    // 게시물 처음 작성 시
     private PostResponseDto.PostsResponseDto getPostsResponseDto(Post post, List<PostImage> postImageList) {
         return PostResponseDto.PostsResponseDto.builder()
                 .postId(post.getId())
@@ -206,7 +203,6 @@ public class PostService {
                     .like(likesRepository.findByUserAndPost(user, post).isPresent())
                     .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
                     .createdAt(post.getCreatedAt())
-                    .likesCount(post.getLikesCount())
                     .build());
         }
 

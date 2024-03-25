@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +44,7 @@ public class UserController {
     @Operation(summary = "로그인", description = "회원 이메일 또는 휴대폰 번호, 비밀번호를 입력해 로그인할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "로그인 완료")
     /*로그인 기능 호출*/
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success("로그인 완료", userService.loginUser(requestDto, response)));
     }
 

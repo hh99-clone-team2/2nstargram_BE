@@ -1,8 +1,6 @@
 package com.sparta.hh2stagram.domain.post.dto;
 
 import com.sparta.hh2stagram.domain.comment.dto.CommentResponseDto;
-import com.sparta.hh2stagram.domain.comment.entity.Comment;
-import com.sparta.hh2stagram.domain.post.entity.Post;
 import com.sparta.hh2stagram.domain.post.entity.PostImage;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,10 +23,9 @@ public class PostResponseDto {
         private boolean like;
         private List<CommentResponseDto> commentList;
         private LocalDateTime createdAt;
-        private Long likesCount;
 
         @Builder
-        public PostsResponseDto(Long postId, String username, String contents, List<PostImageResponseDto> postImageList, int likes, boolean like, List<CommentResponseDto> commentList, LocalDateTime createdAt, Long likesCount) {
+        public PostsResponseDto(Long postId, String username, String contents, List<PostImageResponseDto> postImageList, int likes, boolean like, List<CommentResponseDto> commentList, LocalDateTime createdAt) {
             this.postId = postId;
             this.username = username;
             this.contents = contents;
@@ -37,7 +34,6 @@ public class PostResponseDto {
             this.like = like;
             this.commentList = commentList;
             this.createdAt = createdAt;
-            this.likesCount = likesCount;
         }
     }
 
