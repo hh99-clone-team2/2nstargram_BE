@@ -21,7 +21,6 @@ public class SignupRequestDto {
     private String name;
 
     @NotNull(message = "사용자 이름")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[._-])", message = "사용자 이름은 영어 대소문자, 특수문자 ._-로 이루어져야 합니다.")
     private String username;
 
 
