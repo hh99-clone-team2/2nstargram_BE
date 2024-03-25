@@ -60,22 +60,38 @@ public class FollowService {
         return "언팔로우 되었습니다.";
     }
 
-    public List<FollowResponseDto.FollowingResponseDto> getFollowingList(String username, Long cursorId) {
-        // 슬라이스 검색 (커서)
-        Slice<Follow> following = followRepository.findByFollowingUsernameWithCursor(username, cursorId, PageRequest.of(0, PAGE_SIZE));
-        // 슬라이스 dto 변환 후 반환 해주기
+    public List<FollowResponseDto.FollowingResponseDto> getFollowingList(String username) {
+        User user = userService.findByUsername(username);
+        List<Follow> following = followRepository.findByFollower(user);
         return following.stream()
                 .map(this::convertToFollowingDto)
                 .toList();
     }
 
-    public List<FollowResponseDto.FollowerResponseDto> getFollowerList(String username, Long cursorId) {
+    public List<FollowResponseDto.FollowerResponseDto> getFollowerList(String username) {
         User user = userService.findByUsername(username);
-        Slice<Follow> followers = followRepository.findByFollowerIdWithCursor(user.getId(), cursorId, PageRequest.of(0, PAGE_SIZE));
+        List<Follow> followers = followRepository.findByFollowingUserId(user.getId());
         return followers.stream()
                 .map(this::convertToFollowerDto)
                 .toList();
     }
+    // 여기 무한스크롤 ㅠㅠㅠ
+//    public List<FollowResponseDto.FollowingResponseDto> getFollowingList(String username, Long cursorId) {
+//        // 슬라이스 검색 (커서)
+//        Slice<Follow> following = followRepository.findByFollowingUsernameWithCursor(username, cursorId, PageRequest.of(0, PAGE_SIZE));
+//        // 슬라이스 dto 변환 후 반환 해주기
+//        return following.stream()
+//                .map(this::convertToFollowingDto)
+//                .toList();
+//    }
+//
+//    public List<FollowResponseDto.FollowerResponseDto> getFollowerList(String username, Long cursorId) {
+//        User user = userService.findByUsername(username);
+//        Slice<Follow> followers = followRepository.findByFollowerIdWithCursor(user.getId(), cursorId, PageRequest.of(0, PAGE_SIZE));
+//        return followers.stream()
+//                .map(this::convertToFollowerDto)
+//                .toList();
+//    }
 
     private FollowResponseDto.FollowingResponseDto convertToFollowingDto(Follow following) {
         return new FollowResponseDto.FollowingResponseDto(
