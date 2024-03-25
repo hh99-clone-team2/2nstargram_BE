@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUser(User user);
     Slice<Post> findByUserIdInOrderByCreatedAtDesc(List<Long> userIdList, Pageable pageable);
 
-    @Query ("SELECT p FROM Post p WHERE p.user.id <= ?1 ORDER BY p.likesCount DESC")
+    @Query ("SELECT p FROM Post p ORDER BY p.likesCount DESC")
     Slice<Post> findAllUserIdOrderByLikesCountDescAndUser_UsernameAsc(@Param("userId") Long UserId, Pageable pageable);
 
     Slice<Post> findByUserEqualsOrderByCreatedAtDesc (User user, Pageable pageable);
