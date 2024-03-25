@@ -72,12 +72,14 @@ public class PostResponseDto {
         private int postNumber;
         private int follower;
         private int following;
+        private boolean follow;
 
         @Builder
-        public UserInfoResponseDto(int postNumber, int follower, int following) {
+        public UserInfoResponseDto(int postNumber, int follower, int following, boolean follow) {
             this.postNumber = postNumber;
             this.follower = follower;
             this.following = following;
+            this.follow = follow;
         }
     }
 }
