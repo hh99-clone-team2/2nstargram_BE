@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,7 @@ public class UserController {
     @Operation(summary = "회원 가입", description = "이메일 또는 휴대폰 번호, 비밀번호, 유저 이름을 등록합니다.")
     @ApiResponse(responseCode = "201", description = "회원 가입 완료")
     /*회원가입 기능 호출*/
-    public ResponseEntity<?> signupUser(@RequestBody SignupRequestDto requestDto) {
+    public ResponseEntity<?> signupUser(@Valid @RequestBody SignupRequestDto requestDto) {
 
         userService.signupUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.success("회원가입 완료", null));

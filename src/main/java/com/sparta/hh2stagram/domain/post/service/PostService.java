@@ -120,11 +120,11 @@ public class PostService {
         );
 
         int pageNumber = cursor.intValue(); // cursor를 페이지 번호로 변환
-        int pageSize = 2; // 한 페이지에 표시할 항목 수
+        int pageSize = 10; // 한 페이지에 표시할 항목 수
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-        Slice<Post> postSlice = postRepository.findByUserUserNameByCreatedAtDesc(username, pageRequest);
+        Slice<Post> postSlice = postRepository.findByUserEqualsOrderByCreatedAtDesc(owner, pageRequest);
 
         List<Post> posts = postSlice.getContent();
 
@@ -201,7 +201,7 @@ public class PostService {
                     .postId(post.getId())
                     .username(post.getUser().getUsername())
                     .contents(post.getContents())
-                    .postImageList(post.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList())
+                    .postImageList(post.getPostImageList().stream().map(PostResponseDto.PostImageResponseDto::new).toList()) // stram : list를 꺼내오고 싶을때 하나씩 (향상된 for문 대신에 사용) / map : PostImageResponseDto형식으로 new(생성자)로 만들어줘 라는 뜻 / tolist 리스트형식으로 바꾸기
                     .likes(post.getLikesList().size())
                     .like(likesRepository.findByUserAndPost(user, post).isPresent())
                     .commentList(post.getCommentList().stream().map(CommentResponseDto::new).toList())
