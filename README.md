@@ -34,7 +34,7 @@ https://documenter.getpostman.com/view/33070046/2sA2xnyVjE
 ## ERD
 -----
 
-![ERD](https://github.com/yuha00e/TeamBalance-BE/assets/121149088/577c6eed-0fee-477f-a998-bae288e5341f)
+<img width="504" alt="스크린샷 2024-03-25 오후 8 18 29" src="https://github.com/hh99-clone-team2/2nstargram_BE/assets/84234028/094fd06a-4f41-4e69-9ce0-a64426c70cd6">
 
 -----
 ## Commit Convention
